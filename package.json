@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "discord-api-types": "^0.38.54",
+    "discord.js": "^14.27.0",
+    "esbuild": "^0.28.2"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && npx esbuild src/index.ts --bundle --platform=node --outfile=out/index.cjs",
+    "start": "npm run build && node --env-file=.env out/index.cjs --startup=full",
+    "quickstart": "node --env-file=.env out/index.cjs",
+    "debug": "node --env-file=.env src/index.ts"
+  }
+}
