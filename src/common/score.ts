@@ -1,7 +1,5 @@
 import * as Constants from "../constants.js";
 import { Card, Suit, Rank, Hand } from "./card/card.js"
-import { spreadCardOptions } from "./card/scoring.js";
-import { getRankValue, isSuit } from "./card/util.js";
 
 
 const MIN_RUN_LENGTH = 3;
@@ -28,8 +26,8 @@ export class Score {
         this.sumPossibilities = new Array(15 + 1).fill(0n);
         this.sumPossibilities[0] = 1n;
 
-		this.hand = hand.flatMap(card => spreadCardOptions(card))
-		this.cut = cut.flatMap(card => spreadCardOptions(card))
+		this.hand = hand.flatMap(card => Card.spreadCardOptions(card))
+		this.cut = cut.flatMap(card => Card.spreadCardOptions(card))
 
 		this.hand.forEach(card => this.maintainHandCard(card));
 		this.cut.forEach(card => this.maintainCutCard(card));
@@ -62,7 +60,7 @@ export class Score {
 
 
     private maintainSumPossibilities(card: Card): void {
-        const value = getRankValue(card);
+        const value = Card.getRankValue(card);
         for (let j = 15; j >= value; j--) {
         	this.sumPossibilities[j] += this.sumPossibilities[j - value];
         }
@@ -72,14 +70,14 @@ export class Score {
 	private maintainHandFlush(card: Card): void {
 		for (let i = 0; i < this.handSuitCount.length; i++) {
 			// +=+! is cursed
-			this.handSuitCount[i] += +!isSuit(card, i);
+			this.handSuitCount[i] += +!Card.isSuit(card, i);
 		}
 	}
 
 
 	private maintainCutFlush(card: Card): void {
 		for (let i = 0; i < this.cutSuitsCount.length; i++) {
-			this.cutSuitsCount[i] += +isSuit(card, i);
+			this.cutSuitsCount[i] += +Card.isSuit(card, i);
 		}
 	}
 

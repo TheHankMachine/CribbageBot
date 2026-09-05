@@ -1,9 +1,6 @@
 import { MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { registerSlashCommand } from '../../bot.js';
-import { getBalance } from '../../common/user/balance.js';
-import * as Constants from '../../constants.js';
-import { getDeck, getAndSortDeck } from '../../common/user/deck.js';
-import { getSmallCardDisplay } from '../../common/card/display.js';
+import { getAndSortDeck } from '../../common/user/deck.js';
 import { asniWrap } from '../../common/impersonate.js';
 import { Card, Suit } from '../../common/card/card.js';
 
@@ -18,7 +15,7 @@ registerSlashCommand(
 
         deck.forEach(card => suitBuckets[card.suit].push(card));        
 
-        const content = suitBuckets.map((cards) => getSmallCardDisplay(cards)).join("\n");
+        const content = suitBuckets.map((cards) => Card.getSmallCardDisplay(cards)).join("\n");
 
         await interaction.reply({
             content: asniWrap(content),

@@ -1,4 +1,4 @@
-import type { User, MessageReaction, TextChannel, Message } from "discord.js"
+import type { User, TextChannel, Message } from "discord.js"
 import { getUserData, setUserData } from "./db.js";
 import { sendImpersonatedMessage, sendLocationMessage } from "./impersonate.js";
 
@@ -7,7 +7,12 @@ export type ReactionMessageDBType = {[key: string]: string};
 
 
 // TODO: this shit needs to be renamed BADLY
-async function addReactionAndStore(user: User, key: string, message: Message, reactions: string[]): Promise<Message> {
+async function addReactionAndStore(
+    user: User, 
+    key: string, 
+    message: Message, 
+    reactions: string[]
+): Promise<Message> {
     const data = await getUserData<ReactionMessageDBType>(user.id, "message", {});
     data[key] = message.id;
     await setUserData<ReactionMessageDBType>(user.id, "message", data);
@@ -16,7 +21,12 @@ async function addReactionAndStore(user: User, key: string, message: Message, re
 }
 
 
-export async function clearMessage(user: User, key: string, message: Message, clearReactions: boolean = true) {
+export async function clearMessage(
+    user: User, 
+    key: string, 
+    message: Message, 
+    clearReactions: boolean = true
+) {
     const data = await getUserData<ReactionMessageDBType>(user.id, "message", {});
     delete data[key];
     await setUserData<ReactionMessageDBType>(user.id, "message", data);

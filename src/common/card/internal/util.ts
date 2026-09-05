@@ -1,5 +1,5 @@
-import { Card, Rank, Suit } from "./card.js";
-import * as Constants from "../../constants.js"
+import { Card, Rank, Suit } from "../card.js";
+import * as Constants from "../../../constants.js"
 
 
 export function isSuit(card: Card, suit: Suit) {

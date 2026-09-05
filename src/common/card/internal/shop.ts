@@ -1,5 +1,4 @@
-
-import { Card, Suit } from "./card.js";
+import { Card, Suit } from "../card.js";
 
 const SPECIAL_RANKS = '0F';
 const STANDARD_RANKS = "A23456789XJQK"

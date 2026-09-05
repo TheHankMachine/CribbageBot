@@ -4,12 +4,10 @@ import { getUserData, setUserData } from "../common/db.js";
 import { getDeck } from "../common/user/deck.js";
 import { Card, Deck, Hand } from "../common/card/card.js";
 import { clearMessage, sendImpersonatedReactionMessage, sendLocationReactionMessage } from "../common/reactionMessage.js";
-import { getNick } from "../common/nick.js";
 import { Score } from "../common/score.js";
 import { giveMoney } from "../common/user/balance.js";
 import * as Constants from "../constants.js";
 import { sendImpersonatedMessage, sendLocationMessage } from "../common/impersonate.js";
-import { getLargeHandDisplay } from "../common/card/display.js";
 
 
 // function dealRigged(
@@ -79,9 +77,7 @@ registerSlashCommand(
         const deck = await getDeck(interaction.user, true);
         let hand = deck.slice(0, Constants.HAND_SIZE + 1);
 
-    // this is funny, trust
-    // if (interaction.member.user.id == Constants.SERVER_OWNER_ID) {
-    // hand = dealRigged(deck, await getLuck(interaction.member.user.id), 3, 4);
+        // hand = dealRigged(deck, await getLuck(interaction.member.user.id), 3, 4);
 
         const suitColorPrefixes = ['z', 'r', 'b', 'o', 'p', 'z'];
         const indexToWords = ['one', 'two', 'three', 'four', 'five', 'six'];
@@ -95,7 +91,7 @@ registerSlashCommand(
             "cribbage",
             interaction.channel! as TextChannel,
             "The Casino",
-            "The Dealer deals you:\n" + getLargeHandDisplay(hand.slice(0, Constants.HAND_SIZE)),
+            "The Dealer deals you:\n" + Card.getLargeHandDisplay(hand.slice(0, Constants.HAND_SIZE)),
             emojis,
         );
   }
@@ -140,7 +136,7 @@ registerOnAddReactionHandler(
             user,
             reaction.message.channel as TextChannel,
             "The Casino",
-            `You score\n${getLargeHandDisplay(score.hand, score.cut)}\n${explaination}`,
+            `You score\n${Card.getLargeHandDisplay(score.hand, score.cut)}\n${explaination}`,
         );
   }
 );

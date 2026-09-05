@@ -2,9 +2,6 @@ import { Message, messageLink, SlashCommandBuilder, TextChannel, User } from "di
 import { registerOnAddReactionHandler, registerSlashCommand } from "../bot.js";
 import { Card } from "../common/card/card.js";
 import { getUserData, setUserData } from "../common/db.js";
-import { generateRandomCard, getCardCost } from "../common/card/shop.js";
-import { getLargeHandDisplay } from "../common/card/display.js";
-import { getCardDescription } from "../common/card/util.js";
 import * as Constants from "../constants.js"
 import { getNick } from "../common/nick.js";
 import { clearMessage, sendLocationReactionMessage } from "../common/reactionMessage.js";
@@ -21,8 +18,8 @@ type ShopEntry = { card: Card, cost: bigint };
 
 async function rerollShop(user: User): Promise<ShopEntry[]> {
     const shop: ShopEntry[] = new Array(N_SHOP_CARDS).fill(null).map((_) => {
-        const card = generateRandomCard();
-        return { card: card, cost: getCardCost(card) };
+        const card = Card.generateRandomCard();
+        return { card: card, cost: Card.getCardCost(card) };
     });
     await setUserData<ShopEntry[]>(user.id, "shop", shop);
     return shop;
@@ -35,8 +32,8 @@ async function getShopMessage(user: User, shop: ShopEntry[] | undefined = undefi
         // failsafe, as a consequence, first shop is always free
         if (shop.length == 0) shop = await rerollShop(user);
     }
-    const handDisplay = getLargeHandDisplay(shop.map((entry) => entry.card));
-    const description = shop.map(entry => `${getCardDescription(entry.card)} for ${entry.cost} ${Constants.CURRENCY_NAME}`).join("\n");
+    const handDisplay = Card.getLargeHandDisplay(shop.map((entry) => entry.card));
+    const description = shop.map(entry => `${Card.getCardDescription(entry.card)} for ${entry.cost} ${Constants.CURRENCY_NAME}`).join("\n");
     return `The Merchant presents:\n${description}\n${handDisplay}\nFancy anything?`;
 }
 
@@ -95,7 +92,7 @@ registerOnAddReactionHandler(
             return;
         }
 
-        const content = `The Merchance collects ${entry.cost}\n${getLargeHandDisplay([entry.card])}\nSold!`;
+        const content = `The Merchance collects ${entry.cost}\n${Card.getLargeHandDisplay([entry.card])}\nSold!`;
         await editImpersonatedMessage(reaction.message as Message, asniWrap(content));
 
         clearMessage(user, "shop", reaction.message as Message, true);
