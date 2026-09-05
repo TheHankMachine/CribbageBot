@@ -1,4 +1,4 @@
-import { Card } from "./card.js";
+import { Card } from "../card.js";
 
 
 export function spreadCardOptions(card: Card): Card[] {

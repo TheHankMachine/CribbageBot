@@ -1,12 +1,11 @@
 import { Message, MessageFlags, MessageReaction, SlashCommandBuilder, TextChannel, User } from "discord.js";
 import { registerOnAddReactionHandler, registerOnRemoveReactionHandler, registerSlashCommand } from "../bot.js";
 import { getUserData, setUserData } from "../common/db.js";
-import { getDeck } from "../common/user/deck.js";
-import { Card, Deck, Hand } from "../common/card/card.js";
+import { Card } from "../common/card/card.js";
 import { clearMessage, sendImpersonatedReactionMessage, sendLocationReactionMessage } from "../common/reactionMessage.js";
 import { Score } from "../common/score.js";
-import { giveMoney } from "../common/user/balance.js";
 import * as Constants from "../constants.js";
+import { Player } from "../common/player/player.js"
 import { sendImpersonatedMessage, sendLocationMessage } from "../common/impersonate.js";
 
 
@@ -74,7 +73,7 @@ registerSlashCommand(
         const response = await interaction.reply('shuffling cards');
         response.delete();
 
-        const deck = await getDeck(interaction.user, true);
+        const deck = await Player.getDeck(interaction.user, true);
         let hand = deck.slice(0, Constants.HAND_SIZE + 1);
 
         // hand = dealRigged(deck, await getLuck(interaction.member.user.id), 3, 4);
@@ -128,7 +127,7 @@ registerOnAddReactionHandler(
         
         clearMessage(user, 'cribbage', reaction.message as Message, false);
         
-        await giveMoney(user, scoreTotal);
+        await Player.giveMoney(user, scoreTotal);
         // await reportIncome(userId, Number(scoreTotal));
         // await updateStats(userId, Number(scoreTotal));
 

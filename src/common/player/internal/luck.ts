@@ -1,6 +1,5 @@
-import { User } from 'discord.js';
-import * as Constants from '../../constants.js';
-import { getUserData, setUserData } from '../db.js';
+import type { User } from 'discord.js';
+import { getUserData, setUserData } from '../../db.js';
 
 
 export async function getLuck(user: User): Promise<number> {

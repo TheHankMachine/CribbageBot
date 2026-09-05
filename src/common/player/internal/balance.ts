@@ -1,5 +1,5 @@
-import { User } from "discord.js";
-import { getUserData, setUserData } from "../db.js";
+import type { User } from "discord.js";
+import { getUserData, setUserData } from "../../db.js";
 
 
 export async function getBalance(user: User): Promise<bigint> {
@@ -16,6 +16,9 @@ export async function giveMoney(user: User, amount: bigint | number): Promise<bi
 }
 
 
+/**
+ * note: remember to await this.
+ */
 export async function tryPurchase(user: User, cost: bigint | number): Promise<boolean> {
     if (typeof cost === "number") cost = BigInt(cost);
     let balance = await getBalance(user);

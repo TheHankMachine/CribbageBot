@@ -1,6 +1,5 @@
 import { registerSlashCommand, shutdown } from '../../bot.js';
 import { MessageFlags, SlashCommandBuilder } from 'discord.js';
-import { getBalance } from '../../common/user/balance.js';
 import * as Constants from '../../constants.js';
 
 

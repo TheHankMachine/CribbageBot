@@ -3,11 +3,9 @@ import { registerOnAddReactionHandler, registerSlashCommand } from "../bot.js";
 import { Card } from "../common/card/card.js";
 import { getUserData, setUserData } from "../common/db.js";
 import * as Constants from "../constants.js"
-import { getNick } from "../common/nick.js";
 import { clearMessage, sendLocationReactionMessage } from "../common/reactionMessage.js";
-import { tryPurchase } from "../common/user/balance.js";
 import { asniWrap, editImpersonatedMessage } from "../common/impersonate.js";
-import { giveCard } from "../common/user/deck.js";
+import { Player } from "../common/player/player.js"
 
 
 const REROLL_COST = 5;
@@ -63,7 +61,7 @@ registerOnAddReactionHandler(
     'shop',
     async (user, reaction) => {
         if (reaction.emoji.name == Constants.ARROW_EMOJIES.reroll) {
-            if (await tryPurchase(user, REROLL_COST)) {
+            if (await Player.tryPurchase(user, REROLL_COST)) {
                 const shop = await rerollShop(user);
                 const content = await getShopMessage(user, shop);
 
@@ -86,7 +84,7 @@ registerOnAddReactionHandler(
         }
 
         const entry = shop[index];
-        if (!(await tryPurchase(user, entry.cost))) {
+        if (!(await Player.tryPurchase(user, entry.cost))) {
             // edit('', 'You cannot afford to pay the merchant.');
             await reaction.users.remove(user.id);
             return;
@@ -97,7 +95,7 @@ registerOnAddReactionHandler(
 
         clearMessage(user, "shop", reaction.message as Message, true);
         await rerollShop(user);
-        await giveCard(user, entry.card);
+        await Player.giveCard(user, entry.card);
 
 
 //     const content = `\`\`\`ansi\n${await getNick(

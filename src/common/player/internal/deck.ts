@@ -1,9 +1,9 @@
 // import { getCardCost } from './shop.js';
 // import { Card, suit, rank } from '../classes/card.js';
-import { User } from 'discord.js';
-import * as Constants from '../../constants.js';
-import { Card, Deck, Rank, Suit } from "../card/card.js";
-import { getUserData, setUserData } from '../db.js';
+import type { User } from 'discord.js';
+import * as Constants from '../../../constants.js';
+import { Card, Deck, Rank, Suit } from "../../card/card.js";
+import { getUserData, setUserData } from '../../db.js';
 
 
 export function initDeck(): Deck {
