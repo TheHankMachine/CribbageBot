@@ -7,7 +7,7 @@ export function getCommandLineOptions(): Record<string, string> {
     const options: Record<string, string> = {};
     const splittingRegex = /--([^=]+)=(.+)$/;
     for (const unparsedOption of process.argv.slice(2)) {
-        const split = splittingRegex.exec(unparsedOption);
+        const split = splittingRegex.exec(unparsedOption.toLowerCase());
         if (!split || split.length < 3) continue;
         options[split[1]] = split[2];
     };
@@ -16,6 +16,7 @@ export function getCommandLineOptions(): Record<string, string> {
 
 
 export async function registerCommands(client: Client<true>, slashCommands: Map<string, SlashCommand>) {
+    console.log("registering commands");
     const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
     // MapIterator does not have .map :/
     const commandJSON = [...slashCommands].map(([_, slashCommand]) => slashCommand.command.toJSON());
@@ -24,6 +25,7 @@ export async function registerCommands(client: Client<true>, slashCommands: Map<
 
 
 export async function cacheNicks(client: Client<true>) {
+    console.log("caching nicks");
     const nicks: Record<string, string> = {};
     const guild = client.guilds.cache.get(process.env.SERVER_ID!);
     await guild?.members.fetch();

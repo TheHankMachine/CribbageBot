@@ -64,7 +64,7 @@ export async function start() {
     discordClient = client;
 
     client.once(Events.ClientReady, async (readyClient) => {
-        if (options["startup"] == "FULL") {
+        if (options["startup"] == "full") {
             await registerCommands(readyClient, slashCommands);
             await cacheNicks(readyClient);
         } else {
