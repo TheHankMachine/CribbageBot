@@ -146,6 +146,7 @@ registerOnRemoveReactionHandler(
     async (user: User, reaction: MessageReaction) => {
 
         const discardSelection = await getUserData<number[]>(user.id, "discard", []);
+
         const emojiNumber = reaction.emoji?.name?.slice(1);
         if (!emojiNumber) return;
 
@@ -155,7 +156,7 @@ registerOnRemoveReactionHandler(
 
         const selectionIndex = discardSelection.indexOf(discardIndex);
         
-        discardSelection.slice(selectionIndex, 1);
+        discardSelection.splice(selectionIndex, 1);
 
         await setUserData<number[]>(user.id, "discard", discardSelection);
     }

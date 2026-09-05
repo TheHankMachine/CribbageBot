@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, MessageReaction } from "discord.js";
+import { Client, Events, GatewayIntentBits, MessageReaction, Partials } from "discord.js";
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, User } from "discord.js"
 import type { ReactionMessageDBType } from "./common/reactionMessage.js"
 import { getUserData } from "./common/db.js";
@@ -53,11 +53,11 @@ export async function start() {
             GatewayIntentBits.GuildMessageReactions,
             GatewayIntentBits.GuildMembers,
         ],
-        // partials: [
-        //     Partials.Message,
-        //     Partials.Reaction,
-        //     // Partials.User,
-        // ],
+        partials: [
+            Partials.Message,
+            Partials.Reaction,
+            // Partials.User,
+        ],
     });
     const options = getCommandLineOptions();
 
@@ -83,7 +83,7 @@ export async function start() {
 
     client.on(Events.MessageReactionAdd, async (reaction, user) => {
         if (user.bot) return;
-        const data = await getUserData<ReactionMessageDBType>(user.id, "message", {});        
+        const data = await getUserData<ReactionMessageDBType>(user.id, "message", {});    
         for (const [key, callback] of onAddReactionHandlers.entries()) {
             if (data[key] == reaction.message.id) {
                 callback(user as User, reaction as MessageReaction);
