@@ -2,6 +2,8 @@ import "./commands/ping.js";
 import "./commands/cribbage.js"
 import "./commands/shop.js"
 
+import "./commands/nick.js"
+
 import "./commands/admin/shutdown.js"
 
 import "./commands/ephemeral/balance.js"

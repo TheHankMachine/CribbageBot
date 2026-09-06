@@ -1,6 +1,7 @@
 import { registerSlashCommand, shutdown } from '../../bot.js';
 import { MessageFlags, SlashCommandBuilder } from 'discord.js';
 import * as Constants from '../../constants.js';
+import { replyEphemeral } from '../../common/ephemeral.js';
 
 
 registerSlashCommand(
@@ -16,10 +17,7 @@ registerSlashCommand(
         ),
     async (interaction) => {
         if (interaction.user.id != process.env.ADMIN_USER_ID) {
-            await interaction.reply({
-                content: "this is an admin only command",
-                flags: MessageFlags.Ephemeral
-            });
+            await replyEphemeral(interaction, "this is an admin only command");
             return;
         }
 

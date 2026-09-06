@@ -2,7 +2,7 @@ import { Client, Events, GatewayIntentBits, MessageReaction, Partials } from "di
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, User } from "discord.js"
 import type { ReactionMessageDBType } from "./common/reactionMessage.js"
 import { getUserData } from "./common/db.js";
-import { cacheNicks, getCommandLineOptions, registerCommands } from "./startup.js"
+import { cacheNicks, getCommandLineOptions, registerCommands, sendLogs } from "./startup.js"
 import { loadNicks } from "./common/nick.js";
 
 
@@ -71,6 +71,8 @@ export async function start() {
             await loadNicks();
         }
 
+        await sendLogs(readyClient);
+
         console.log('[32monline...[0m');
     });
 
@@ -92,6 +94,7 @@ export async function start() {
         }
     });
 
+    
     client.on(Events.MessageReactionRemove, async (reaction, user) => {
         if (user.bot) return;
         const data = await getUserData<ReactionMessageDBType>(user.id, "message", {});        
