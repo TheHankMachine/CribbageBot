@@ -2,7 +2,7 @@ import { TextChannel, Message, User, Webhook } from "discord.js"
 import { getNick } from "./nick.js";
 
 
-export function asniWrap(content: string): string {
+export function ansiWrap(content: string): string {
     return "```ansi\n" + content + "\n```";
 }
 
@@ -10,7 +10,7 @@ export function asniWrap(content: string): string {
 export async function sendLocationMessage(user: User, channel: TextChannel, location: string, content: string): Promise<Message> {
     return await sendImpersonatedMessage(
         channel, 
-        asniWrap(content), 
+        ansiWrap(content), 
         `${getNick(user)} walks into ${location}`,
         user.avatarURL() ?? ""  
     );

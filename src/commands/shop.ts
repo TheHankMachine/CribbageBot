@@ -4,7 +4,7 @@ import { Card } from "../common/card/card.js";
 import { getUserData, setUserData } from "../common/db.js";
 import * as Constants from "../constants.js"
 import { clearMessage, sendLocationReactionMessage } from "../common/reactionMessage.js";
-import { asniWrap, editImpersonatedMessage } from "../common/impersonate.js";
+import { ansiWrap, editImpersonatedMessage } from "../common/impersonate.js";
 import { Player } from "../common/player/player.js"
 
 
@@ -65,7 +65,7 @@ registerOnAddReactionHandler(
                 const shop = await rerollShop(user);
                 const content = await getShopMessage(user, shop);
 
-                await editImpersonatedMessage(reaction.message as Message, asniWrap(content));
+                await editImpersonatedMessage(reaction.message as Message, ansiWrap(content));
             }
             await reaction.users.remove(user.id);
             return;
@@ -91,7 +91,7 @@ registerOnAddReactionHandler(
         }
 
         const content = `The Merchance collects ${entry.cost}\n${Card.getLargeHandDisplay([entry.card])}\nSold!`;
-        await editImpersonatedMessage(reaction.message as Message, asniWrap(content));
+        await editImpersonatedMessage(reaction.message as Message, ansiWrap(content));
 
         clearMessage(user, "shop", reaction.message as Message, true);
         await rerollShop(user);

@@ -1,6 +1,6 @@
 import { MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { registerSlashCommand } from '../../bot.js';
-import { asniWrap } from '../../common/impersonate.js';
+import { ansiWrap } from '../../common/impersonate.js';
 import { Card, Suit } from '../../common/card/card.js';
 import { Player } from '../../common/player/player.js';
 
@@ -18,7 +18,7 @@ registerSlashCommand(
         const content = suitBuckets.map((cards) => Card.getSmallCardDisplay(cards)).join("\n");
 
         await interaction.reply({
-            content: asniWrap(content),
+            content: ansiWrap(content),
             flags: MessageFlags.Ephemeral
         });        
 

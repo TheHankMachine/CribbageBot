@@ -4,6 +4,7 @@ import { Client, REST, Routes, TextChannel } from "discord.js";
 import { SlashCommand } from "./bot.js";
 import { setNicks } from "./common/nick.js";
 import { channel } from "node:diagnostics_channel";
+import { ansiWrap } from "./common/impersonate.js";
 
 
 // this is dumb
@@ -50,7 +51,7 @@ export async function sendLogs(client: Client<true>) {
     const logPaths = logNames.map(name => path.join(LOGS_DIR, name));
     logPaths.forEach(async (logPath, i) => {
         const log = await fs.readFile(logPath);
-        await logChannel.send(`## ${logNames[i]} \n` + log.toString("utf-8"));
+        await logChannel.send(`## ${logNames[i]} \n` + ansiWrap(log.toString("utf-8")));
         await fs.rm(logPath);
     });
 }
