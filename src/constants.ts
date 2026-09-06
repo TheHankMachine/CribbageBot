@@ -5,7 +5,6 @@ export const today = () =>
     });
 
 export const CURRENCY_NAME = '🐒';
-export const HALT_CODE = 0x48414C54; // HALT in hexidecimal
 
 export const STANDARD_RANK_SYMBOLS = 'A23456789XJQK';
 export const RANK_NAMES: Record<string, string> = {

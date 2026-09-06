@@ -4,6 +4,14 @@ import * as Constants from '../../constants.js';
 import { replyEphemeral } from '../../common/ephemeral.js';
 
 
+const EXIT_CODES: Record<string, number> = {
+    restart: 0,
+    terminate: 0x48414C54,  // HALT in hexidecimal
+    rebuild:   0x4d414b45,  // MAKE in hexicdecimal
+    gitpull:   0x50554c4c,  // PULL in hexicdecimal
+}
+
+
 registerSlashCommand(
     new SlashCommandBuilder().setName("shutdown")
         .setDescription("shuts down the bot")
@@ -11,8 +19,10 @@ registerSlashCommand(
             .setDescription('action')
             .setRequired(true)
             .addChoices(
-                { name: 'restart', value: 'restart' },
-                { name: 'terminate', value: 'terminate' },
+                { name: 'restart',      value: 'restart' },
+                { name: 'terminate',    value: 'terminate' },
+                { name: 'rebuild',      value: "rebuild" },
+                { name: 'pull changes', value: "gitpull" }
             )
         ),
     async (interaction) => {
@@ -21,22 +31,16 @@ registerSlashCommand(
             return;
         }
 
-        const action = interaction.options.getString('action');
-        if (action == "restart") {
-            await interaction.reply("restarting...");
-            await shutdown();
-            process.exit(0);
-        }
-        
+        const action = interaction.options.getString('action')!;
+        const exitCode = EXIT_CODES[action] ?? 0;
+
+        let response = "shutting down...";
         if (action == "terminate") {
-            let content = "terminating...";
-            if (Math.random() < 1) {
-                content = "https://klipy.com/gifs/spy-tf2-30"
-            }
-            await interaction.reply(content);
-            await shutdown();
-            process.exit(Constants.HALT_CODE);
+            response = "https://klipy.com/gifs/spy-tf2-30";
         }
-        
+
+        await interaction.reply(response);
+        await shutdown();
+        process.exit(exitCode);   
     }
 );

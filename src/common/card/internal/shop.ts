@@ -8,10 +8,10 @@ const WILD_COST_MULT = 1.5;
 
 const BASE_COST = 10;
 const RANK_COST_MULT: Record<string, number> = {
-    "0": 2.1,
-    "3": 1.1,
-    "5": 1.4,
-    "F": 1.8,
+    "0": 3,
+    "3": 1.50,
+    "5": 1.75,
+    "F": 1.35,
 };
 
 const SPECIAL_RANK_CHANCE = 0.0525;
