@@ -1,6 +1,7 @@
-import "./commands/ping.js";
+// import "./commands/ping.js";
 import "./commands/cribbage.js"
-import "./commands/shop.js"
+
+// import "./commands/shop.js"
 
 import "./commands/nick.js"
 

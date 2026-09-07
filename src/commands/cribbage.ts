@@ -7,6 +7,7 @@ import { Score } from "../common/score.js";
 import * as Constants from "../constants.js";
 import { Player } from "../common/player/player.js"
 import { sendImpersonatedMessage, sendLocationMessage } from "../common/impersonate.js";
+import { replyEphemeral } from "../common/ephemeral.js";
 
 
 // function dealRigged(
@@ -58,13 +59,10 @@ registerSlashCommand(
 
         if (
             today == lastPlayed 
-            // && interaction.user.id != Constants.SERVER_OWNER_ID
-            && false
+            && interaction.user.id != process.env.ADMIN_USER_ID
+            && !process.env.ADMIN_EVERYONE
         ) {
-            interaction.reply({ 
-                content: "you've already played today\ncome back tomorrow",
-                flags: MessageFlags.Ephemeral
-            });
+            await replyEphemeral(interaction, "you've already played today\ncome back tomorrow");
             return;
         }
 
