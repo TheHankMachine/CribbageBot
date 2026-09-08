@@ -67,8 +67,8 @@ export const ARROW_EMOJIES = {
 export namespace DisplayConstants {
     export const SUIT_SYMBOLS = '♠♥♣♦? ';
 
-    export const MAX_TERMINAL_WIDTH = 36;
-    export const DISCORD_ESCAPE_SUITS = [
+    export const MAX_TERMINAL_WIDTH = 40;
+    export const ANSI_SUITS = [
         '[30m', //'[30m',
         '[31m',
         '[34m', //'[34m',
@@ -76,8 +76,8 @@ export namespace DisplayConstants {
         '[35m',
         '[30m',
     ];
-    export const DISCORD_ESCAPE_BACKGROUND = '[47m'; 
-    export const DISCORD_ESCAPE_CLEAR = '[0m';
+    export const ANSI_CARD_BACKGROUND = '[47m'; 
+    export const ANSI_CLEAR = '[0m';
     export const CARD_FACES: Record<string, string[]> = {
         '0':  ['0      ', '       ', '       ', '       ', '      0'],
         'A':  ['A      ', '       ', '   x   ', '       ', '      ∀'],
@@ -100,7 +100,7 @@ export namespace DisplayConstants {
     export const CARD_BORDER_REPLACE_CHAR = "x";
     export const CARD_BORDER: Record<string, string> = {
         top: '╭───────╮',
-        middle: '│x│',
+        side: '│',
         bottom: '╰───────╯',
     };
 }
