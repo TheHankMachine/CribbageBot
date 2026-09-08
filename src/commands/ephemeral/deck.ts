@@ -1,7 +1,7 @@
 import { MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { registerSlashCommand } from '../../bot.js';
 import { ansiWrap } from '../../common/impersonate.js';
-import { Card, Suit } from '../../common/card/card.js';
+import { Card } from '../../common/card/card.js';
 import { Player } from '../../common/player/player.js';
 
 
@@ -11,7 +11,7 @@ registerSlashCommand(
     async (interaction) => {
         
         const deck = await Player.getAndSortDeck(interaction.user);  
-        const suitBuckets: Card[][] = new Array(Suit.length).fill(null).map(() => []);
+        const suitBuckets: Card[][] = Array.from({ length: Card.Suit.length }, () => []);
 
         deck.forEach(card => suitBuckets[card.suit].push(card));        
 

@@ -1,9 +1,9 @@
-import { Card, Rank, Suit } from "../card.js";
+import { Card } from "../card.js";
 import * as Constants from "../../../constants.js"
 
 
-export function isSuit(card: Card, suit: Suit) {
-    if (card.suit == Suit.WILD) {
+export function isSuit(card: Card, suit: Card.Suit) {
+    if (card.suit == Card.Suit.WILD) {
         return true;
     }
     return card.suit == suit;
@@ -15,18 +15,19 @@ export function getRankValue(card: Card) {
 }
 
 
-export function getRankName(rank: Rank) {
+export function getRankName(rank: Card.Rank) {
     return Constants.RANK_NAMES[rank] ?? rank;
 }
 
 
-export function getCardPip(card: Card): string {
-    return card.rank.split('').map(getRankName).join('') + Constants.DisplayConstants.SUIT_SYMBOLS[card.suit];
+export function getPip(card: Card): string {
+    return getRankName(card.rank) + (card.modifier ?? "") + (card.modifierValue ?? "");
+    // return card.rank.split('').map(getRankName).join('') + Constants.DisplayConstants.SUIT_SYMBOLS[card.suit];
 }
 
 
 export function getCardDescription(card: Card): string {
-    let description = getCardPip(card);
+    let description = getPip(card);
     description += ' (';
     
     const options = card.rank.split('/');
@@ -53,7 +54,7 @@ export function getCardDescription(card: Card): string {
         }
     }
 
-    if (card.suit == Suit.WILD) {
+    if (card.suit == Card.Suit.WILD) {
         description += 'of wild suit)';
     } else {
         description += `of ${Constants.DisplayConstants.SUIT_SYMBOLS[card.suit]})`;

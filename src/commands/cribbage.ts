@@ -3,11 +3,11 @@ import { registerOnAddReactionHandler, registerOnRemoveReactionHandler, register
 import { getUserData, setUserData } from "../common/db.js";
 import { Card } from "../common/card/card.js";
 import { clearMessage, sendImpersonatedReactionMessage, sendLocationReactionMessage } from "../common/reactionMessage.js";
-import { Score } from "../common/score.js";
 import * as Constants from "../constants.js";
 import { Player } from "../common/player/player.js"
 import { sendImpersonatedMessage, sendLocationMessage } from "../common/impersonate.js";
 import { replyEphemeral } from "../common/ephemeral.js";
+import { ModifierScorer } from "../common/score/scoring.js";
 
 
 // function dealRigged(
@@ -118,10 +118,11 @@ registerOnAddReactionHandler(
         const hand = cards.filter((_, i) => !discardSelection.includes(i));
         // const discard = cards.filter((_, i) => !discardSelection.includes(i));
 
-        const score = new Score(hand, [cut]);
+        // const score = new Score(hand, [cut]);
+        const score = new ModifierScorer(hand, [cut]);
 
         
-        const [explaination, scoreTotal] = score.getExplaination();
+        const [explaination, scoreTotal] = score.getExplainationAndScore();
         
         clearMessage(user, 'cribbage', reaction.message as Message, false);
         

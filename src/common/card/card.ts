@@ -1,32 +1,34 @@
 import * as Util from "./internal/util.js"
 import * as Shop from "./internal/shop.js"
-import * as Scoring from "./internal/scoring.js"
+// import * as Scoring from "./internal/scoring.js"
 import * as Display from "./internal/display.js"
+import * as Suits from "./internal/suit.js"
 
 
-export type Rank = string;
+export type Card = {
+    rank: Card.Rank,
+    suit: Suits.Suit,
+    modifier?: Card.Modifier | undefined,
+    modifierValue?: Card.ModifierValue | undefined
+};
 
-export type Suit = number;
-export namespace Suit {
-    export const SPADES     = 0;
-    export const HEARTS     = 1;
-    export const CLUBS      = 2;
-    export const DIAMONDS   = 3;
-    export const WILD       = 4;
-    export const NONE       = 5;
 
-    export const entries = () => [SPADES, HEARTS, CLUBS, DIAMONDS, WILD, NONE];
-    export const length = 6;
-}
-
-export type Card = { rank: Rank, suit: Suit };
 export type Hand = Card[];
 export type Deck = Card[];
+
+
+export namespace Card {
+    export type Rank = string;
+    export type Suit = Suits.Suit;
+    
+    export type Modifier = string;
+    export type ModifierValue = number | Rank | undefined;
+}
 
 // acts like a namespace
 export const Card = {
     ...Util,
     ...Shop,
-    ...Scoring,
-    ...Display
+    ...Display,
+    ...Suits
 };

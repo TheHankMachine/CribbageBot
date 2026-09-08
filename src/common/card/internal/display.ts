@@ -1,17 +1,17 @@
 import { DisplayConstants } from "../../../constants.js";
 import * as Constants from "../../../constants.js"
-import { getCardPip } from "./util.js";
-import { Card, Suit } from "../card.js";
+import { getPip } from "./util.js";
+import { Card } from "../card.js";
 
 
 export function getSmallCardDisplay(cards: Card[]): string {
     let result = DisplayConstants.DISCORD_ESCAPE_BACKGROUND;
-    let currentSuit: Suit = -1;
+    let currentSuit: Card.Suit = -1;
     for (const card of cards) {
         if (card.suit != currentSuit) {
             result += DisplayConstants.DISCORD_ESCAPE_SUITS[card.suit];
         }
-        result += "[" + getCardPip(card) + "]";
+        result += "[" + getPip(card) + DisplayConstants.SUIT_SYMBOLS[card.suit] + "]";
     }
     return result;
 }
@@ -22,6 +22,7 @@ export function getSmallHandDisplay(hand: Card[], cut: Card[] = []): string {
 }
 
 
+// TODO: refactor and fix
 export function getLargeHandDisplay(hand: Card[], cut: Card[] = []): string {
     const rows: string[] = new Array(DisplayConstants.CARD_BORDER_HEIGHT).fill("");
 
@@ -42,7 +43,7 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = []): string {
 
         const cardFace = DisplayConstants.CARD_FACES[card.rank[0]];
         const esc = DisplayConstants.DISCORD_ESCAPE_SUITS[card.suit];
-        const pip = card.rank.split('').map((e) => Constants.RANK_NAMES[e] ?? e).join('');
+        const pip = getPip(card);
 
         rows[0] += esc + DisplayConstants.CARD_BORDER.top;
         for (let i = 0; i < cardFace.length; i++) {

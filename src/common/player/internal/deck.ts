@@ -2,15 +2,15 @@
 // import { Card, suit, rank } from '../classes/card.js';
 import type { User } from 'discord.js';
 import * as Constants from '../../../constants.js';
-import { Card, Deck, Rank, Suit } from "../../card/card.js";
+import { Card, Deck } from "../../card/card.js";
 import { getUserData, setUserData } from '../../db.js';
 
 
 export function initDeck(): Deck {
     const deck: Deck = [];
-    for (const suit of [Suit.SPADES, Suit.HEARTS, Suit.CLUBS, Suit.DIAMONDS]) {
+    for (const suit of [Card.Suit.SPADES, Card.Suit.HEARTS, Card.Suit.CLUBS, Card.Suit.DIAMONDS]) {
         for (const rank of Constants.STANDARD_RANK_SYMBOLS) {
-            deck.push({rank: rank, suit: suit});
+            deck.push({ rank: rank, suit: suit });
         }
     }
     return deck;
@@ -49,7 +49,7 @@ const BASE_CARD_COST = 10;
 const DECK_WORTH_MULT = 2.5;
 
 
-const RANK_ORDER: Record<Rank, number> = {};
+const RANK_ORDER: Record<Card.Rank, number> = {};
 '0A23456789XJQKFB'.split("").forEach((rank, i) => RANK_ORDER[rank] = i);
 
 
