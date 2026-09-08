@@ -134,7 +134,7 @@ registerOnAddReactionHandler(
             user,
             reaction.message.channel as TextChannel,
             "The Casino",
-            `You score\n${Card.getLargeHandDisplay(score.hand, score.cut)}\n${explaination}`,
+            `You score:\n${Card.getLargeHandDisplay(score.hand, score.cut, card => card.rank)}\n${explaination}`,
         );
   }
 );

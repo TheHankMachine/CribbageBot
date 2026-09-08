@@ -18,14 +18,13 @@ export function getSmallCardDisplay(cards: Card[]): string {
 
 
 export function getSmallHandDisplay(hand: Card[], cut: Card[] = []): string {
-    return getSmallCardDisplay(hand) + " " + getSmallCardDisplay(cut);
+    return getSmallCardDisplay(hand) + "  " + getSmallCardDisplay(cut);
 }
-
 
 
 // TODO: refactor and fix
 // TODO: split into multiple functions
-export function getLargeHandDisplay(hand: Card[], cut: Card[] = []): string {
+export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], pipCallback: (card: Card) => string = getPip): string {
     const cardWidth = DisplayConstants.CARD_BORDER.top.length;
     const cutSplitWidth = 3;
 
@@ -44,7 +43,7 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = []): string {
     if (overlapVisiblePartLength == 0) {
         return getSmallHandDisplay(hand, cut);
     }
-    
+
     if (isNaN(overlapVisiblePartLength)) {
         overlapVisiblePartLength = 0;
     }
@@ -65,7 +64,7 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = []): string {
         rows[0] += DisplayConstants.CARD_BORDER.top.slice(0, cardWidth);
         rows[rows.length - 1] += DisplayConstants.CARD_BORDER.bottom.slice(0, cardWidth);
 
-        const pip = getPip(card);        
+        const pip = pipCallback(card);        
         const face: string[] = DisplayConstants.CARD_FACES[card.rank];
 
         for (let i = 0; i < face.length; i++) {
@@ -84,7 +83,7 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = []): string {
     }
     cut.forEach((card, i) => addCard(card, i != cut.length - 1));
 
-    return "=".repeat(DisplayConstants.MAX_TERMINAL_WIDTH) + "\n" + DisplayConstants.ANSI_CARD_BACKGROUND + rows.join("\n") + DisplayConstants.ANSI_CLEAR;
+    return "\n" + DisplayConstants.ANSI_CARD_BACKGROUND + rows.join("\n") + DisplayConstants.ANSI_CLEAR;
 
 
     // // HUH?!

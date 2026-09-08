@@ -6,12 +6,8 @@ export const today = () =>
 
 export const CURRENCY_NAME = '🐒';
 
-export const STANDARD_RANK_SYMBOLS = 'A23456789XJQK';
-export const RANK_NAMES: Record<string, string> = {
-    "X": '10',
-    "F": '15',
-    "B": ' ',
-};
+export const STANDARD_RANK_SYMBOLS = [ "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" ];
+
 
 export const HAND_SIZE = 6;
 export const DISCARD_COUNT = 2;
@@ -28,11 +24,11 @@ export const CARD_VALUES: Record<string, number> = {
     '7': 7,
     '8': 8,
     '9': 9,
-    'X': 10,
+    '10': 10,
     'J': 10,
     'Q': 10,
     'K': 10,
-    'F': 15,
+    '15': 15,
     'B': 20,
 };
 
@@ -89,11 +85,11 @@ export namespace DisplayConstants {
         '7':  ['7      ', '  x x  ', ' x x x ', '  x x  ', '      L'],
         '8':  ['8      ', ' x x x ', '  x x  ', ' x x x ', '      8'],
         '9':  ['9      ', ' x x x ', ' x x x ', ' x x x ', '      6'],
-        'X':  ['10     ', ' x x x ', ' x x x ', ' x x x ', ' x   0I'],
+        '10': ['10     ', ' x x x ', ' x x x ', ' x x x ', ' x   0I'],
         'J':  ['J      ', ' x {)  ', ' |/%/| ', '  (} x ', '      ſ'],
         'Q':  ['Q      ', ' x/(}, ', ' /\\%\\/ ', " '{)/x ", '      O'],
         'K':  ['K   W  ', ' x {)| ', ' |/%/| ', ' |(} x ', '  M   >'],
-        'F':  ['15     ', ' xxxxx ', ' xxxxx ', ' xxxxx ', '     SI'],
+        '15': ['15     ', ' xxxxx ', ' xxxxx ', ' xxxxx ', '     SI'],
         'B':  ['       ', '       ', '       ', '       ', '       '],
     };
     export const CARD_BORDER_HEIGHT = 7;

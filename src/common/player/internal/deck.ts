@@ -50,7 +50,7 @@ const DECK_WORTH_MULT = 2.5;
 
 
 const RANK_ORDER: Record<Card.Rank, number> = {};
-'0A23456789XJQKFB'.split("").forEach((rank, i) => RANK_ORDER[rank] = i);
+["0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "F", "B"].forEach((rank, i) => RANK_ORDER[rank] = i);
 
 
 export async function getAndSortDeck(user: User): Promise<Deck> {
