@@ -4,27 +4,32 @@ import { getPip } from "./util.js";
 import { Card } from "../card.js";
 
 
-export function getSmallCardDisplay(cards: Card[]): string {
+export function getSmallCardDisplay(cards: Card[], fullPip: boolean = true): string {
     let result = DisplayConstants.ANSI_CARD_BACKGROUND;
     let currentSuit: Card.Suit = -1;
     for (const card of cards) {
         if (card.suit != currentSuit) {
             result += DisplayConstants.ANSI_SUITS[card.suit];
         }
-        result += "[" + getPip(card) + DisplayConstants.SUIT_SYMBOLS[card.suit] + "]";
+        result += "[" + (fullPip? getPip(card) : card.rank) + DisplayConstants.SUIT_SYMBOLS[card.suit] + "]";
     }
-    return result;
+    return result + DisplayConstants.ANSI_CLEAR;
 }
 
 
-export function getSmallHandDisplay(hand: Card[], cut: Card[] = []): string {
-    return getSmallCardDisplay(hand) + "  " + getSmallCardDisplay(cut);
+export function getSmallHandDisplay(hand: Card[], cut: Card[] = [], fullPip: boolean = true): string {
+    let result = getSmallCardDisplay(hand, fullPip);
+    if (cut.length > 0) {
+        result += "  " + getSmallCardDisplay(cut, fullPip);
+    }
+    return result;
+    // return getSmallCardDisplay(hand) + "  " + getSmallCardDisplay(cut);
 }
 
 
 // TODO: refactor and fix
 // TODO: split into multiple functions
-export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], pipCallback: (card: Card) => string = getPip): string {
+export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], fullPip: boolean = true): string {
     const cardWidth = DisplayConstants.CARD_BORDER.top.length;
     const cutSplitWidth = 3;
 
@@ -64,7 +69,7 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], pipCallback:
         rows[0] += DisplayConstants.CARD_BORDER.top.slice(0, cardWidth);
         rows[rows.length - 1] += DisplayConstants.CARD_BORDER.bottom.slice(0, cardWidth);
 
-        const pip = pipCallback(card);        
+        const pip = fullPip? getPip(card) : card.rank;        
         const face: string[] = DisplayConstants.CARD_FACES[card.rank];
 
         for (let i = 0; i < face.length; i++) {

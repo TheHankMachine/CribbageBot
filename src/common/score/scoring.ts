@@ -23,7 +23,7 @@ export class ModifierScorer extends BasicScorer {
 
     private scoreMults: Record<ScoringComponent, number> = ScoringComponent.entries().map(_ => 1);
     private bonus: number = 0;
-    private rightCopies = 0;
+    private rightwardCopies = 0;
 
     public hand: Hand = [];
 
@@ -33,48 +33,80 @@ export class ModifierScorer extends BasicScorer {
     constructor(hand: Hand, cut: Card[] = []) {
         super();
 
-        hand = hand.flatMap(card => this.processModifiers(card));
-        cut = cut.flatMap(card => this.processModifiers(card));
+        // hand = hand.flatMap(card => this.processRanks(card));
+        // cut = cut.flatMap(card => this.processRanks(card));
 
-        hand = hand.flatMap(card => this.processRanks(card));
-        cut = cut.flatMap(card => this.processRanks(card));
+        // hand = hand.flatMap(card => this.processModifiers(card));
+        // cut = cut.flatMap(card => this.processModifiers(card));
+
+        hand = hand.flatMap(card => this.process(card));
+        cut = cut.flatMap(card => this.process(card));
+        
+        hand.forEach(card => this.addHandCard(card));
+        cut.forEach(card => this.addCutCard(card));
+
+        this.hand = hand;
+        this.cut = cut;
+    }
+
+
+    private process(card: Card): Card[] {
+        return this.processRanks(card).flatMap(card => this.processModifiers(card));
     }
 
 
     // TODO: stragety pattern or something
-    private processRanks(card: Card): Card | Card[] {
+    private processRanks(card: Card): Card[] {
+
         if (card.rank == ">>") {
-            this.rightCopies += 1;
-            return [];
-        } else if (this.rightCopies > 1) {
-            const copies = this.rightCopies;
-            this.rightCopies = 0;
-            return new Array(copies).fill(Card);
+            
+            // janky edge case 🤮🤮🤮
+            const result = [this.processModifiers(card)].flat();
+            const f = result.filter(card => card.rank != ">>");
+
+            this.rightwardCopies += result.length - f.length;
+
+            return f;
+
+            
+            // const a = [this.processModifiers(card)].flat().flatMap(card => this.processRanks(card));
+
+            // console.log(a);
+        } else if (this.rightwardCopies >= 1) {
+            const copies = this.rightwardCopies + 1;
+            this.rightwardCopies = 0;
+            return new Array(copies).fill(card);
         }
 
-        return card;
+        return [card];
     }
 
 
     // TODO: stragety pattern or something
-    private processModifiers(card: Card): Card | Card[] {
+    private processModifiers(card: Card): Card[] {
         if (card.modifier == "*") {
-            const n = card.modifierValue as number;
+            const n = Number(card.modifierValue); // FAUK ME 
             // it does not matter that this is all the same reference
-            return new Array(n).fill(card); 
+            return new Array(n).fill(card);
         }
         
         if (card.modifier == ",") {
             const copy = { ...card };
             copy.rank = card.modifierValue as Card.Rank;
-            return [card, copy];
+            copy.modifier = undefined;
+
+            // console.log(copy.rank, this.processRanks(copy))
+            // console.log(this.rightwardCopies);
+
+
+            return [card, ...this.processRanks(copy)];
         }
 
         if (card.modifier == "+") {
-            this.bonus += card.modifierValue as number;
+            this.bonus += Number(card.modifierValue);
         }
 
-        return card;
+        return [card];
     }
     
 
@@ -118,6 +150,28 @@ export class ModifierScorer extends BasicScorer {
 
         return [explaination.trimStart(), total];
     }
+
+    
+    // this is dumb
+    public getTotal() {
+        const scores: Record<ScoringComponent, bigint> = {
+            [ScoringComponent.FIFTEEN]: this.getFifteensScore(),
+            [ScoringComponent.PAIR]:    this.getPairScore(),
+            [ScoringComponent.RUN]:     this.getRunScore(),
+            [ScoringComponent.FLUSH]:   this.getFlushScore(),
+            [ScoringComponent.NIB]:     this.getNibsScore(),
+            [ScoringComponent.NOB]:     this.getNobsScore(),
+            [ScoringComponent.BONUS]:   BigInt(this.bonus)
+        };
+
+        for (const component of ScoringComponent.entries()) {
+            scores[component] *= BigInt(this.scoreMults[component]);
+        } 
+
+        return Object.values(scores).reduce((a, b) => a + b);
+    }
+
+
 
         // let explaination = '';
 

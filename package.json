@@ -9,6 +9,10 @@
     "build": "tsc --noEmit && npx esbuild src/index.ts --bundle --platform=node --outfile=out/index.cjs",
     "start": "npm run build && node --env-file=.env out/index.cjs --startup=full",
     "quickstart": "node --env-file=.env out/index.cjs",
-    "debug": "node --env-file=.env src/index.ts"
+    "debug": "node --env-file=.env src/index.ts",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.0"
   }
 }
