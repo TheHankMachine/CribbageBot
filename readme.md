@@ -9,14 +9,10 @@ If any of my code is dogshit, it's totally for this reason and totatlly not beca
 # TODO:
  - Refactor bad code
  - Deploy on server
- - Move user and message related methods into their own namepsace
+ - Move constants
  - Implement features:
     - Charity
     - @everyone
-    - Nick
     - Transmutate
-    - Shred
-    - Resurrect
-    - Bin
  - Add admin commands:
     - eval

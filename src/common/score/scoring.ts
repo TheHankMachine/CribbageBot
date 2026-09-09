@@ -23,49 +23,60 @@ export class ModifierScorer extends BasicScorer {
 
     private scoreMults: Record<ScoringComponent, number> = ScoringComponent.entries().map(_ => 1);
     private bonus: number = 0;
+    private rightCopies = 0;
 
     public hand: Hand = [];
+
     public cut: Card[] = [];
 
 
     constructor(hand: Hand, cut: Card[] = []) {
         super();
 
-        hand.forEach(card => this.processModifiers(card, card => { 
-            this.addHandCard(card);
-            this.hand.push(card);
-        }));
+        hand = hand.flatMap(card => this.processModifiers(card));
+        cut = cut.flatMap(card => this.processModifiers(card));
 
-        cut.forEach(card => this.processModifiers(card, card => {
-            this.addCutCard(card);
-            this.cut.push(card);
-        }));
+        hand = hand.flatMap(card => this.processRanks(card));
+        cut = cut.flatMap(card => this.processRanks(card));
     }
 
 
-    private processModifiers(card: Card, add: (card: Card) => void) {
+    // TODO: stragety pattern or something
+    private processRanks(card: Card): Card | Card[] {
+        if (card.rank == ">>") {
+            this.rightCopies += 1;
+            return [];
+        } else if (this.rightCopies > 1) {
+            const copies = this.rightCopies;
+            this.rightCopies = 0;
+            return new Array(copies).fill(Card);
+        }
 
+        return card;
+    }
+
+
+    // TODO: stragety pattern or something
+    private processModifiers(card: Card): Card | Card[] {
         if (card.modifier == "*") {
             const n = card.modifierValue as number;
-            for (let i = 0; i < n; i++) {
-                add(card);
-            }
-            return;
+            // it does not matter that this is all the same reference
+            return new Array(n).fill(card); 
+        }
+        
+        if (card.modifier == ",") {
+            const copy = { ...card };
+            copy.rank = card.modifierValue as Card.Rank;
+            return [card, copy];
         }
 
         if (card.modifier == "+") {
             this.bonus += card.modifierValue as number;
         }
 
-        if (card.modifier == "&") {
-            const copy = { ...card };
-            copy.rank = card.modifierValue as Card.Rank;
-            add(copy);
-        }
-
-        add(card);
-
+        return card;
     }
+    
 
     public getExplainationAndScore(): [string, bigint] {
 		const halfWidth = Math.floor(Constants.DisplayConstants.MAX_TERMINAL_WIDTH / 2);
