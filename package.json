@@ -10,7 +10,7 @@
     "start": "npm run build && node --env-file=.env out/index.cjs --startup=full",
     "quickstart": "node --env-file=.env out/index.cjs",
     "debug": "node --env-file=.env src/index.ts",
-    "test": "vitest"
+    "tests": "vitest"
   },
   "devDependencies": {
     "vitest": "^5.0.0"

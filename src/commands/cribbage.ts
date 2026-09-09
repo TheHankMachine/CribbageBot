@@ -7,7 +7,7 @@ import * as Constants from "../constants.js";
 import { Player } from "../common/player/player.js"
 import { sendImpersonatedMessage, sendLocationMessage } from "../common/impersonate.js";
 import { replyEphemeral } from "../common/ephemeral.js";
-import { ModifierScorer } from "../common/score/scoring.js";
+import { ExtendedScorer } from "../common/score/extendedScorer.js";
 
 
 // function dealRigged(
@@ -119,7 +119,7 @@ registerOnAddReactionHandler(
         // const discard = cards.filter((_, i) => !discardSelection.includes(i));
 
         // const score = new Score(hand, [cut]);
-        const score = new ModifierScorer(hand, [cut]);
+        const score = new ExtendedScorer(hand, [cut]);
 
         
         const [explaination, scoreTotal] = score.getExplainationAndScore();

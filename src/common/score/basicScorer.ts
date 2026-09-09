@@ -6,7 +6,13 @@ const MIN_RUN_LENGTH = 3;
 const RUN_RANK_ORDER = [ "0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" ];
 
 
-export class BasicScorer {
+/**
+ * Only support base cribbage scoring rules.
+ * 
+ * Special ranks and modifiers are not supported, 
+ * with the exception of 0 being added to the run order.
+ */
+export class BaseScorer {
 		
 
 	private rankCount: Record<Card.Rank, number> = {};

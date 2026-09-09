@@ -2,7 +2,7 @@
 // import { ScoreVoucher } from "../../score.js"
 
 import { Card, Hand } from "../card/card.js";
-import { BasicScorer } from "./basicScorer.js";
+import { BaseScorer } from "./basicScorer.js";
 import { ScoringComponent } from "./scoringComponents.js";
 import * as Constants from "../../constants.js"
 
@@ -18,7 +18,7 @@ const SCORING_COMPONENT_TO_NAME: Record<ScoringComponent, string> = {
 };
 
 
-export class ModifierScorer extends BasicScorer {
+export class ExtendedScorer extends BaseScorer {
 
 
     private scoreMults: Record<ScoringComponent, number> = ScoringComponent.entries().map(_ => 1);
@@ -26,27 +26,17 @@ export class ModifierScorer extends BasicScorer {
     private rightwardCopies = 0;
 
     public hand: Hand = [];
-
     public cut: Card[] = [];
 
 
     constructor(hand: Hand, cut: Card[] = []) {
         super();
 
-        // hand = hand.flatMap(card => this.processRanks(card));
-        // cut = cut.flatMap(card => this.processRanks(card));
-
-        // hand = hand.flatMap(card => this.processModifiers(card));
-        // cut = cut.flatMap(card => this.processModifiers(card));
-
-        hand = hand.flatMap(card => this.process(card));
-        cut = cut.flatMap(card => this.process(card));
+        this.hand = hand.flatMap(card => this.process(card));
+        this.cut = cut.flatMap(card => this.process(card));
         
-        hand.forEach(card => this.addHandCard(card));
-        cut.forEach(card => this.addCutCard(card));
-
-        this.hand = hand;
-        this.cut = cut;
+        this.hand.forEach(card => this.addHandCard(card));
+        this.cut.forEach(card => this.addCutCard(card));
     }
 
 
@@ -60,18 +50,14 @@ export class ModifierScorer extends BasicScorer {
 
         if (card.rank == ">>") {
             
-            // janky edge case 🤮🤮🤮
+            // janky fix for shitty edge case 🤮🤮🤮
             const result = [this.processModifiers(card)].flat();
             const f = result.filter(card => card.rank != ">>");
-
+            
             this.rightwardCopies += result.length - f.length;
 
             return f;
-
             
-            // const a = [this.processModifiers(card)].flat().flatMap(card => this.processRanks(card));
-
-            // console.log(a);
         } else if (this.rightwardCopies >= 1) {
             const copies = this.rightwardCopies + 1;
             this.rightwardCopies = 0;
@@ -93,12 +79,8 @@ export class ModifierScorer extends BasicScorer {
         if (card.modifier == ",") {
             const copy = { ...card };
             copy.rank = card.modifierValue as Card.Rank;
+            // strip card of union modifier so we don't get extra cards
             copy.modifier = undefined;
-
-            // console.log(copy.rank, this.processRanks(copy))
-            // console.log(this.rightwardCopies);
-
-
             return [card, ...this.processRanks(copy)];
         }
 
