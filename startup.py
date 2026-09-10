@@ -20,7 +20,7 @@ def quick_start():
 
 # This is really dumb
 def git_pull_and_start():
-    return subprocess.run("git pull && npm run start", capture_output=True, text=True, shell=True)
+    return subprocess.run("git pull && npm start", capture_output=True, text=True, shell=True)
 
 
 def log_output(subprocess_result):

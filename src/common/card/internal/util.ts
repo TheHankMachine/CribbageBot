@@ -21,6 +21,19 @@ export function getPip(card: Card): string {
 }
 
 
+function implies(a: boolean, b: boolean) {
+    return !a || b;
+}
+
+
+export function equals(a: Card, b: Card) {
+    return a.rank == b.rank 
+        && a.suit == b.suit
+        && a.modifier == b.modifier
+        && implies(a.modifier == b.modifier && a.modifier != undefined, a.modifierValue == b.modifierValue);
+}3
+
+
 // export function getCardDescription(card: Card): string {
 //     let description = getPip(card);
 //     description += ' (';

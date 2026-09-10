@@ -1,4 +1,4 @@
-
+// TODO: clean the fuck up
 export const today = () =>
     new Date().toLocaleDateString('nl', {
         timeZone: 'Etc/GMT+4',

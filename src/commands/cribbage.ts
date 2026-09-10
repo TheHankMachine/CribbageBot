@@ -78,7 +78,7 @@ registerSlashCommand(
 
         const suitColorPrefixes = ['z', 'r', 'b', 'o', 'p', 'z'];
         const indexToWords = ['one', 'two', 'three', 'four', 'five', 'six'];
-        const emojis = hand.slice(0, Constants.HAND_SIZE).map((e, i) => suitColorPrefixes[e.suit] + indexToWords[i]).map((e) => `:${e}:${Constants.CUSTOM_EMOJI_IDS[e]}`);
+        const emojis = hand.slice(0, Constants.HAND_SIZE).map((card, i) => suitColorPrefixes[card.suit] + indexToWords[i]).map(e => `:${e}:${Constants.CUSTOM_EMOJI_IDS[e]}`);
 
         await setUserData<Card[]>(interaction.user.id, "deal", hand);
         await setUserData<number[]>(interaction.user.id, "discard", []);

@@ -17,6 +17,11 @@ export function initDeck(): Deck {
 }
 
 
+export async function setDeck(user: User, deck: Deck) {
+    await setUserData<Deck>(user.id, "deck", deck);
+}
+
+
 export async function getDeck(user: User, shuffled = false): Promise<Deck> {
     let deck = await getUserData<Deck>(user.id, "deck", []);
     if (deck.length == 0) {
@@ -35,13 +40,18 @@ export async function giveCard(user: User, card: Card) {
 }
 
 
-//removes a single instance of a card
-export async function removeCard(user: User, card: Card) {
+//
+/**
+ * removes a single instance of a card
+ * @returns boolean on whether the removal was successful
+ */
+export async function removeCard(user: User, target: Card): Promise<boolean> {
     const deck = await getUserData<Deck>(user.id, "deck", []);
-    let i = deck.findIndex((e: Card) => e.rank == card.rank && e.suit == card.suit);
-    if (i == -1) return;
+    let i = deck.findIndex(card => Card.equals(card, target));
+    if (i == -1) return false;
     deck.splice(i, 1);
     await setUserData<Deck>(user.id, "deck", deck);
+    return true;
 }
 
 

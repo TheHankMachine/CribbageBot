@@ -88,58 +88,27 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], fullPip: boo
     }
     cut.forEach((card, i) => addCard(card, i != cut.length - 1));
 
-    return "\n" + DisplayConstants.ANSI_CARD_BACKGROUND + rows.join("\n") + DisplayConstants.ANSI_CLEAR;
+    return DisplayConstants.ANSI_CARD_BACKGROUND + rows.join("\n") + DisplayConstants.ANSI_CLEAR;
+
+}
 
 
-    // // HUH?!
-    // const nCards = hand.length + cut.length * 1.5;
-    // const overBudget = (DisplayConstants.CARD_BORDER.top.length * nCards - DisplayConstants.MAX_TERMINAL_WIDTH) / nCards;
-    // const overlap = Math.min(
-    //     Math.max(0, Math.ceil(overBudget)),
-    //     DisplayConstants.CARD_BORDER.top.length - 2
-    // );
+export function renameMeLaterTransmutationDisplay(left: Card, right: Card, arrow: "->" | "<-" | "<->" = "->") {
+    const leftDisplay = getLargeHandDisplay([left]).split("\n");
+    const rightDisplay = getLargeHandDisplay([right]).split("\n");
 
-    // function addCard(card: Card) {
-    //     for (let i = 0; i < rows.length; i++) {
-    //         if (rows[i].length > 0 && overlap > 0) {
-    //             rows[i] = rows[i].slice(0, -overlap);
-    //         }
-    //     }
+    // pad arrow so it looks slightly nicer
+    arrow = " " + arrow + " ";
 
-    //     const cardFace = DisplayConstants.CARD_FACES[card.rank[0]];
-    //     const esc = DisplayConstants.DISCORD_ESCAPE_SUITS[card.suit];
-    //     const pip = getPip(card);
+    const height = leftDisplay.length;
 
-    //     rows[0] += esc + DisplayConstants.CARD_BORDER.top;
-    //     for (let i = 0; i < cardFace.length; i++) {
-    //         let c = DisplayConstants.CARD_BORDER.middle.replace(
-    //             'x',
-    //             cardFace[i].replaceAll('x', DisplayConstants.SUIT_SYMBOLS[card.suit])
-    //         );
+    let result = ""
+    for (let i = 0; i < height; i++) {
+        const middleSpace = i == Math.floor(leftDisplay.length / 2) ? arrow : " ".repeat(arrow.length);
+        result += leftDisplay[i]
+        result += DisplayConstants.ANSI_CLEAR + middleSpace + DisplayConstants.ANSI_CARD_BACKGROUND 
+        result += rightDisplay[i] + '\n';
+    }
 
-    //         if (i == 0) {
-    //             c = c.slice(0, 1) + pip + c.slice(pip.length + 1);
-    //         }
-
-    //         rows[i + 1] += esc + c;
-    //     }
-    //     rows[DisplayConstants.CARD_BORDER_HEIGHT - 1] +=
-    //     esc + DisplayConstants.CARD_BORDER.bottom;
-    // }
-
-    // for (const card of hand) {
-    //     addCard(card);
-    // }
-
-    // if (cut.length > 0) {
-    //     for (let i = 0; i < rows.length; i++) {
-    //         rows[i] += ' '.repeat(overlap + 2);
-    //     }
-
-    //     for (const card of cut) {
-    //         addCard(card);
-    //     }
-    // }
-
-    // return rows.map(e => DisplayConstants.DISCORD_ESCAPE_BACKGROUND + e.trimEnd() + DisplayConstants.DISCORD_ESCAPE_CLEAR).join('\n');
+    return result;
 }
