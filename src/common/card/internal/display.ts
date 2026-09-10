@@ -34,18 +34,21 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], fullPip: boo
     const cutSplitWidth = 3;
 
     let requiredLength = 0;
+    let nOverlappedCards = 0;
     if (hand.length > 0) {
         requiredLength += cardWidth;
+        nOverlappedCards += hand.length - 1;
     }
     if (cut.length > 0) { 
         requiredLength += cutSplitWidth;
         requiredLength += cardWidth; 
-    }
+        nOverlappedCards += cut.length - 1;
+    } 
 
-    let overlapVisiblePartLength = Math.floor((DisplayConstants.MAX_TERMINAL_WIDTH - cardWidth) / (hand.length + cut.length - 1));
+    let overlapVisiblePartLength = Math.floor((DisplayConstants.MAX_TERMINAL_WIDTH - requiredLength) / nOverlappedCards);
 
     // cannot display with big cards, default to small display
-    if (overlapVisiblePartLength == 0) {
+    if (overlapVisiblePartLength < 2) {
         return getSmallHandDisplay(hand, cut);
     }
 

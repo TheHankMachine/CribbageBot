@@ -6,6 +6,7 @@
 import "./commands/admin/shutdown.js"
 
 import "./commands/nick.js"
+import "./commands/charity.js"
 
 
 import "./commands/ephemeral/balance.js"

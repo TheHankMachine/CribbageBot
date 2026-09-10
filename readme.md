@@ -10,6 +10,8 @@ If any of my code is dogshit, it's totally for this reason and totatlly not beca
  - Refactor bad code
  - Deploy on server
  - Move constants
+ - clean/remove unused import
+ - Split card and player into sub-namespaces
  - Implement features:
     - Charity
     - @everyone

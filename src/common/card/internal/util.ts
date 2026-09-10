@@ -17,7 +17,6 @@ export function getRankValue(card: Card) {
 
 export function getPip(card: Card): string {
     return card.rank + (card.modifier ?? "") + (card.modifierValue ?? "");
-    // return card.rank.split('').map(getRankName).join('') + Constants.DisplayConstants.SUIT_SYMBOLS[card.suit];
 }
 
 
@@ -30,7 +29,7 @@ export function equals(a: Card, b: Card) {
     return a.rank == b.rank 
         && a.suit == b.suit
         && a.modifier == b.modifier
-        && implies(a.modifier == b.modifier && a.modifier != undefined, a.modifierValue == b.modifierValue);
+        && implies(a.modifierValue != b.modifierValue, !a.modifier && !b.modifier);
 }3
 
 
