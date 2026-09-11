@@ -21,16 +21,9 @@ testScore([["4♥", "10♥", "9♥", "Q♥"], ["3♣"]], 4n, "testing hand-only 
 testScore([["4♥", "10♥", "9♥", "Q♥"], ["3♥"]], 5n, "testing full flush");
 
 
-/*
-You score:
-╭──────╭──────╭──────╭───────╮   ╭───────╮
-│J     │5     │7     │J      │   │9      │
-│ ♠ {) │  ♠ ♠ │  ♠ ♠ │ ? {)  │   │ ? ? ? │
-│ |/%/|│   ♠  │ ♠ ♠ ♠│ |/%/| │   │ ? ? ? │
-│  (} ♠│  ♠ ♠ │  ♠ ♠ │  (} ? │   │ ? ? ? │
-│      │      │      │      ſ│   │      6│
-╰──────╰──────╰──────╰───────╯   ╰───────╯
-fifteens: 4         pairs: 2
-flush: 5            nobs: 3
-total 14
-*/
+testScore([["J♥", "3♣"], ["8?"]], 1n, "testing nobs with wild cut")
+testScore([["J?", "3♣", "A♦"], ["8♣"]], 1n, "testing nobs wild jack")
+testScore([["J?", "3♣", "A♦"], ["8?"]], 1n, "testing nobs wild jack and wild cut")
+
+
+testScore([["J♠", "5♠", "7♠", "J?"], ["9?"]], 13n, "testing luka's example hand")

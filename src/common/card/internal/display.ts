@@ -33,6 +33,7 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], fullPip: boo
     const cardWidth = DisplayConstants.CARD_BORDER.top.length;
     const cutSplitWidth = 3;
 
+    
     let requiredLength = 0;
     let nOverlappedCards = 0;
     if (hand.length > 0) {
@@ -45,16 +46,16 @@ export function getLargeHandDisplay(hand: Card[], cut: Card[] = [], fullPip: boo
         nOverlappedCards += cut.length - 1;
     } 
 
-    let overlapVisiblePartLength = Math.floor((DisplayConstants.MAX_TERMINAL_WIDTH - requiredLength) / nOverlappedCards);
 
-    // cannot display with big cards, default to small display
-    if (overlapVisiblePartLength < 2) {
-        return getSmallHandDisplay(hand, cut);
+    let overlapVisiblePartLength = 0;
+    if (nOverlappedCards > 0) {
+        overlapVisiblePartLength = Math.floor((DisplayConstants.MAX_TERMINAL_WIDTH - requiredLength) / nOverlappedCards);
+        // cannot display with big cards, default to small display
+        if (overlapVisiblePartLength < 2) {
+            return getSmallHandDisplay(hand, cut);
+        }
     }
 
-    if (isNaN(overlapVisiblePartLength)) {
-        overlapVisiblePartLength = 0;
-    }
 
     const rows = new Array(DisplayConstants.CARD_BORDER_HEIGHT).fill("");
     let currentSuit = -1;

@@ -3,8 +3,8 @@ import { type CacheType, ChatInputCommandInteraction, GuildMember, MessageReacti
 import * as Constants from "../constants.js";
 import { Player } from "../common/player/player.js";
 import { replyEphemeral } from "../common/ephemeral.js";
-import { getSmallCardDisplay } from "../common/card/internal/display.js";
 import { getNick } from "../common/nick.js";
+
 
 registerSlashCommand(
     new SlashCommandBuilder().setName("charity")

@@ -51,7 +51,7 @@ export class ExtendedScorer extends BaseScorer {
         if (card.rank == ">>") {
             
             // janky fix for shitty edge case 🤮🤮🤮
-            const result = [this.processModifiers(card)].flat();
+            const result = this.processModifiers(card).flat();
             const f = result.filter(card => card.rank != ">>");
             
             this.rightwardCopies += result.length - f.length;

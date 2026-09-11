@@ -10,7 +10,7 @@ const RUN_RANK_ORDER = [ "0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10",
  * Only support base cribbage scoring rules.
  * 
  * Special ranks and modifiers are not supported, 
- * with the exception of 0 being added to the run order.
+ * with the exception of 0 being added to the run order and wild suit.
  */
 export class BaseScorer {
 		
@@ -18,9 +18,9 @@ export class BaseScorer {
 	private rankCount: Record<Card.Rank, number> = {};
     private sumPossibilities: bigint[];
 	
-    private handSuitCount: number[] = new Array(Card.Suit.length).fill(0);
-	private cutSuitsCount: number[] = new Array(Card.Suit.length).fill(0);
-    private jackSuitCount: number[] = new Array(Card.Suit.length).fill(0);
+    private handSuitCount: Record<Card.Suit, number> = new Array(Card.Suit.length).fill(0);
+	private cutSuitsCount: Record<Card.Suit, number> = new Array(Card.Suit.length).fill(0);
+    private jackSuitCount: Record<Card.Suit, number> = new Array(Card.Suit.length).fill(0);
 
 	private cutJackCount: number = 0;
 	private cardCount: number = 0;
@@ -73,16 +73,16 @@ export class BaseScorer {
 
 
 	private maintainHandFlush(card: Card): void {
-		for (let i = 0; i < this.handSuitCount.length; i++) {
+		for (const suit of Card.Suit.basic()) {
 			// +=+! is cursed
-			this.handSuitCount[i] += +!Card.isSuit(card, i);
+			this.handSuitCount[suit] += +!Card.isSuit(card, suit);
 		}
 	}
 
 
 	private maintainCutFlush(card: Card): void {
-		for (let i = 0; i < this.cutSuitsCount.length; i++) {
-			this.cutSuitsCount[i] += +Card.isSuit(card, i);
+		for (const suit of Card.Suit.basic()) {
+			this.cutSuitsCount[suit] += +Card.isSuit(card, suit);
 		}
 	}
 
@@ -125,24 +125,24 @@ export class BaseScorer {
 
 
 	public getFlushScore(): bigint {
-		let suit: Card.Suit = -1;
-		for (let i = 0; i < this.handSuitCount.length; i++) {
-			if (this.handSuitCount[i] == 0) {
-				suit = i;
+		let flushSuit: Card.Suit = -1;
+		for (const suit of Card.Suit.basic()) {
+			if (this.handSuitCount[suit] == 0) {
+				flushSuit = suit;
 				break;
 			}
 		}
-		if (suit == -1) {
+		if (flushSuit == -1) {
 			return 0n;
 		}
-		return BigInt(this.cardCount + this.cutSuitsCount[suit]);
+		return BigInt(this.cardCount + this.cutSuitsCount[flushSuit]);
 	}
 
 
 	public getNobsScore(): bigint {
 		let score = 0;
-		for (let i = 0; i < this.cutSuitsCount.length; i++) {
-			score += this.jackSuitCount[i] * this.cutSuitsCount[i];
+		for (const suit in Card.Suit.basic()) {
+			score += this.jackSuitCount[suit] * this.cutSuitsCount[suit];
 		}
 		score += this.jackSuitCount[Card.Suit.WILD];
 		return BigInt(score);
