@@ -13,7 +13,7 @@ MIN_UPTIME_BEFORE_SHUTOFF = 10
 
 
 def run_and_log(command):
-    now = datetime.now().strftime(LOGGING_TIME_FORMAT)
+    now = datetime.datetime.now().strftime(LOGGING_TIME_FORMAT)
     log_path = os.path.join(LOG_DIR, f"{now}.txt")
 
     with open(log_path, "w", buffering=1) as log_file:
@@ -28,16 +28,16 @@ def run_and_log(command):
 
 
 def start():
-    return run_command("npm start")
+    return run_and_log("npm start")
 
 
 def quick_start():
-    return run_command("npm run quickstart")
+    return run_and_log("npm run quickstart")
 
 
 # This is really dumb
 def git_pull_and_start():
-    return run_command("git pull && npm start")
+    return run_and_log("git pull && npm start")
 
 
 def start_and_keep_alive():
