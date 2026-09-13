@@ -1,8 +1,7 @@
 import { assert, expect, test } from 'vitest'
-import { parseCard } from "./parseCard.js"
+import { parseCard } from "./parse-card.js"
 import { Card } from '../../card/card.js';
-import { BaseScorer } from '../basicScorer.js';
-import { ExtendedScorer } from '../extendedScorer.js';
+import { ExtendedScorer } from '../extended-scorer.js';
 
 
 export function testScore(

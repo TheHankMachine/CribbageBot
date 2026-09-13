@@ -1,13 +1,13 @@
 import type { User, TextChannel, Message } from "discord.js"
-import { getUserData, setUserData } from "./db.js";
-import { sendImpersonatedMessage, sendLocationMessage } from "./impersonate.js";
+import { getUserData, setUserData } from "../db.js";
+import { sendImpersonatedMessage, sendLocationMessage } from "../impersonate.js";
 
 
 export type ReactionMessageDBType = {[key: string]: string};
 
 
 // TODO: this shit needs to be renamed BADLY
-async function addReactionAndStore(
+export async function addReactionAndStore(
     user: User, 
     key: string, 
     message: Message, 

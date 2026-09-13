@@ -1,13 +1,14 @@
-import { Message, MessageFlags, MessageReaction, SlashCommandBuilder, TextChannel, User } from "discord.js";
+import { Message, MessageReaction, SlashCommandBuilder, TextChannel, User } from "discord.js";
 import { registerOnAddReactionHandler, registerOnRemoveReactionHandler, registerSlashCommand } from "../bot.js";
 import { getUserData, setUserData } from "../common/db.js";
 import { Card } from "../common/card/card.js";
-import { clearMessage, sendImpersonatedReactionMessage, sendLocationReactionMessage } from "../common/reactionMessage.js";
+import { clearMessage, sendImpersonatedReactionMessage, sendLocationReactionMessage } from "../common/reactions/reaction-message.js";
 import * as Constants from "../constants.js";
 import { Player } from "../common/player/player.js"
-import { sendImpersonatedMessage, sendLocationMessage } from "../common/impersonate.js";
+import { sendLocationMessage } from "../common/impersonate.js";
 import { replyEphemeral } from "../common/ephemeral.js";
-import { ExtendedScorer } from "../common/score/extendedScorer.js";
+import { ExtendedScorer } from "../common/score/extended-scorer.js";
+import { ReactionButton } from "../common/reactions/reaction-button.js";
 
 
 // function dealRigged(
@@ -68,7 +69,7 @@ registerSlashCommand(
 
         await setUserData<string>(interaction.user.id, "date", today);
 
-        const response = await interaction.reply('shuffling cards');
+        const response = await interaction.reply('shuffling cards...');
         response.delete();
 
         const deck = await Player.getDeck(interaction.user, true);
@@ -76,9 +77,7 @@ registerSlashCommand(
 
         // hand = dealRigged(deck, await getLuck(interaction.member.user.id), 3, 4);
 
-        const suitColorPrefixes = ['z', 'r', 'b', 'o', 'p', 'z'];
-        const indexToWords = ['one', 'two', 'three', 'four', 'five', 'six'];
-        const emojis = hand.slice(0, Constants.HAND_SIZE).map((card, i) => suitColorPrefixes[card.suit] + indexToWords[i]).map(e => `:${e}:${Constants.CUSTOM_EMOJI_IDS[e]}`);
+        const emojis = hand.slice(0, Constants.HAND_SIZE).map((card, i) => ReactionButton.getEmojiFromNumber(i, card.suit)!);
 
         await setUserData<Card[]>(interaction.user.id, "deal", hand);
         await setUserData<number[]>(interaction.user.id, "discard", []);
@@ -100,10 +99,8 @@ registerOnAddReactionHandler(
     'cribbage',
     async (user: User, reaction: MessageReaction) => {
         const discardSelection = await getUserData<number[]>(user.id, "discard", []);
-        const emojiNumber = reaction.emoji?.name?.slice(1);
-        if (!emojiNumber) return;
 
-        const discardIndex = INDEX_TO_WORDS.indexOf(emojiNumber);
+        const discardIndex = ReactionButton.getNumber(reaction);
         if (discardIndex == -1 || discardIndex >= Constants.HAND_SIZE || discardSelection.includes(discardIndex)) return;
 
         discardSelection.push(discardIndex);
@@ -143,14 +140,9 @@ registerOnAddReactionHandler(
 registerOnRemoveReactionHandler(
     'cribbage',
     async (user: User, reaction: MessageReaction) => {
-
         const discardSelection = await getUserData<number[]>(user.id, "discard", []);
 
-        const emojiNumber = reaction.emoji?.name?.slice(1);
-        if (!emojiNumber) return;
-
-        const discardIndex = INDEX_TO_WORDS.indexOf(emojiNumber);
-
+        const discardIndex = ReactionButton.getNumber(reaction);
         if (discardIndex == -1 || discardIndex >= Constants.HAND_SIZE || !discardSelection.includes(discardIndex)) return;
 
         const selectionIndex = discardSelection.indexOf(discardIndex);

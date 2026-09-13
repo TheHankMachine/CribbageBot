@@ -1,9 +1,6 @@
-// import { Card, Rank } from "../card.js";
-// import { ScoreVoucher } from "../../score.js"
-
 import { Card, Hand } from "../card/card.js";
-import { BaseScorer } from "./basicScorer.js";
-import { ScoringComponent } from "./scoringComponents.js";
+import { BaseScorer } from "./base-scorer.js";
+import { ScoringComponent } from "./scoring-component.js";
 import * as Constants from "../../constants.js"
 
 
@@ -21,9 +18,9 @@ const SCORING_COMPONENT_TO_NAME: Record<ScoringComponent, string> = {
 export class ExtendedScorer extends BaseScorer {
 
 
-    private scoreMults: Record<ScoringComponent, number> = ScoringComponent.entries().map(_ => 1);
-    private bonus: number = 0;
-    private rightwardCopies = 0;
+    public scoreMults: Record<ScoringComponent, number> = ScoringComponent.entries().map(_ => 1);
+    public bonus: number = 0;
+    public rightwardCopies = 0;
 
     public hand: Hand = [];
     public cut: Card[] = [];
@@ -40,13 +37,13 @@ export class ExtendedScorer extends BaseScorer {
     }
 
 
-    private process(card: Card): Card[] {
+    public process(card: Card): Card[] {
         return this.processRanks(card).flatMap(card => this.processModifiers(card));
     }
 
 
     // TODO: stragety pattern or something
-    private processRanks(card: Card): Card[] {
+    public processRanks(card: Card): Card[] {
 
         if (card.rank == ">>") {
             
@@ -69,7 +66,7 @@ export class ExtendedScorer extends BaseScorer {
 
 
     // TODO: stragety pattern or something
-    private processModifiers(card: Card): Card[] {
+    public processModifiers(card: Card): Card[] {
         if (card.modifier == "*") {
             const n = Number(card.modifierValue); // FAUK ME 
             // it does not matter that this is all the same reference

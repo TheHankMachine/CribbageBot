@@ -1,13 +1,13 @@
 import { registerOnAddReactionHandler, registerSlashCommand } from "../bot.js";
 import { type CacheType, ChatInputCommandInteraction, MessageReaction, SlashCommandBuilder, TextChannel, User } from "discord.js"
-import { setUserData } from "../common/db.js";
-import { sendLocationReactionMessage } from "../common/reactionMessage.js";
+import { sendLocationReactionMessage } from "../common/reactions/reaction-message.js";
 import { Card } from "../common/card/card.js";
 import * as Constants from "../constants.js"
 import { replyEphemeral } from "../common/ephemeral.js";
 import { getDeck } from "../common/player/internal/deck.js";
 import { Player } from "../common/player/player.js";
 import { ansiWrap } from "../common/impersonate.js";
+import { ReactionButton } from "../common/reactions/reaction-button.js";
 
 
 const PAINTABLE_SUITS = [ Card.Suit.SPADES, Card.Suit.HEARTS, Card.Suit.CLUBS, Card.Suit.DIAMONDS, Card.Suit.WILD ];
@@ -15,11 +15,10 @@ const BASE_PRICE = 6;
 const WILD_PRICE = 8;
 
 
-// TODO: clean up
-const suitColorPrefixes = ['z', 'r', 'b', 'o', 'p', 'z'];
+const suitPrice = (suit: Card.Suit) => suit == Card.Suit.WILD ? WILD_PRICE : BASE_PRICE;
 
-// TODO: make `:${e}:${Constants.CUSTOM_EMOJI_IDS[e]}` a function. DRY and all that shit
-const emojis = PAINTABLE_SUITS.map(suit => suitColorPrefixes[suit] + 'one').map((e) => `:${e}:${Constants.CUSTOM_EMOJI_IDS[e]}`);
+// const emojis = PAINTABLE_SUITS.map(suit => suitColorPrefixes[suit] + 'one').map((e) => `:${e}:${Emojis.CUSTOM_NAME_TO_ID[e]}`);
+const emojis = PAINTABLE_SUITS.map(suit => ReactionButton.getEmojiFromNumber(Math.floor(suitPrice(suit)), suit)!);
 
 
 
@@ -46,7 +45,7 @@ registerSlashCommand(
             interaction.channel as TextChannel,
             "The Attic",
             `The Painter offers to paint one of your cards\ncosts 6 ${Constants.CURRENCY_NAME}, wild costs 8${Constants.CURRENCY_NAME}`,
-            [...emojis, Constants.CONFIRMATION_EMOJIES.deny]
+            [...emojis, ReactionButton.Emojis.DENY]
         );
     }
 );
@@ -54,19 +53,13 @@ registerSlashCommand(
 
 registerOnAddReactionHandler("paint", async (user, reaction) => {
 
-    if (reaction.emoji.name == Constants.CONFIRMATION_EMOJIES.deny) {
+    if (ReactionButton.isDenial(reaction)) {
         await reaction.message.delete();
         return;
     }
 
-    const targetPrefix = reaction.emoji?.name?.[0];
-    if (!targetPrefix) {
-        await reaction.users.remove(user.id);
-        return;
-    }
-
-    const targetSuit = suitColorPrefixes.indexOf(targetPrefix);
-    if (targetSuit == -1) {
+    const targetSuit = ReactionButton.getSuit(reaction);
+    if (!targetSuit) {
         await reaction.users.remove(user.id);
         return;
     }
@@ -78,7 +71,7 @@ registerOnAddReactionHandler("paint", async (user, reaction) => {
         return;
     }
     
-    const price = targetSuit == Card.Suit.WILD? BASE_PRICE : WILD_PRICE;
+    const price = suitPrice(targetSuit);
     
     if (!(await Player.tryPurchase(user, price))) {
         await reaction.users.remove(user.id);

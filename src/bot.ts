@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits, MessageReaction, Partials } from "discord.js";
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, User } from "discord.js"
-import type { ReactionMessageDBType } from "./common/reactionMessage.js"
+import type { ReactionMessageDBType } from "./common/reactions/reaction-message.js"
 import { getUserData } from "./common/db.js";
 import { cacheNicks, getCommandLineOptions, registerCommands, sendLogs } from "./startup.js"
 import { loadNicks } from "./common/nick.js";

@@ -14,6 +14,7 @@ import "./commands/ephemeral/deck.js"
 
 import "./commands/cribbage.js"
 import "./commands/paint.js"
+import "./commands/trade.js"
 
 
 import { start } from "./bot.js"

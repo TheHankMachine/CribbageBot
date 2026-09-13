@@ -2,7 +2,7 @@ import { registerOnAddReactionHandler, registerSlashCommand } from "../bot.js";
 import { type CacheType, ChatInputCommandInteraction, MessageReaction, SlashCommandBuilder, TextChannel, User } from "discord.js"
 import { sendImpersonatedMessage } from "../common/impersonate.js"
 import { setUserData } from "../common/db.js";
-import { sendReactionMessage } from "../common/reactionMessage.js";
+import { sendReactionMessage } from "../common/reactions/reaction-message.js";
 
 registerSlashCommand(
     new SlashCommandBuilder().setName("ping")
