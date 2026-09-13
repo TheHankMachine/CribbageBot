@@ -67,7 +67,7 @@ registerSlashCommand(
 
 
 function getTradeDisplay(data: TradeData) {
-    return Card.renameMeLaterTransmutationDisplay(
+    return Card.Display.renameMeLaterTransmutationDisplay(
         data.positions[data.request.initiatorId].card,
         data.positions[data.request.targetId].card,
         "<->"

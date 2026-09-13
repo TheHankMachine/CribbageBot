@@ -10,10 +10,7 @@ registerRank({
         "   x   ", 
         "       ", 
         "      ∀"
-    ],
-    runConnections: {
-        successor: "2"
-    }
+    ]
 });
 
 
@@ -26,11 +23,7 @@ registerRank({
         "       ", 
         "   x   ", 
         "      Z"
-    ],
-    runConnections: {
-        predecessor: "A",
-        successor: "3"
-    }
+    ]
 });
 
 
@@ -43,11 +36,7 @@ registerRank({
         "   x   ", 
         "   x   ", 
         "      E"
-    ],
-    runConnections: {
-        predecessor: "2",
-        successor: "4"
-    }
+    ]
 });
 
 
@@ -60,11 +49,7 @@ registerRank({
         "       ", 
         "  x x  ", 
         "      h"
-    ],
-    runConnections: {
-        predecessor: "3",
-        successor: "5"
-    }
+    ]
 });
 
 
@@ -77,11 +62,7 @@ registerRank({
         "   x   ", 
         "  x x  ", 
         "      S"
-    ],
-    runConnections: {
-        predecessor: "4",
-        successor: "6"
-    }
+    ]
 });
 
 
@@ -94,11 +75,7 @@ registerRank({
         "  x x  ", 
         "  x x  ", 
         "      9"
-    ],
-    runConnections: {
-        predecessor: "5",
-        successor: "7"
-    }
+    ]
 });
 
 
@@ -111,45 +88,33 @@ registerRank({
         " x x x ", 
         "  x x  ", 
         "      L"
-    ],
-    runConnections: {
-        predecessor: "6",
-        successor: "8"
-    }
+    ]
 });
 
 
 registerRank({
     rank: "8",
-    value: 9,
+    value: 8,
     face:  [
         "8      ",
         " x x x ",
         "  x x  ",
         " x x x ",
         "      8"
-    ],
-    runConnections: {
-        predecessor: "7",
-        successor: "9"
-    }
+    ]
 });
 
 
 registerRank({
     rank: "9",
-    value: 10,
+    value: 9,
     face:  [
         "9      ",
         " x x x ",
         " x x x ",
         " x x x ",
         "      6"
-    ],
-    runConnections: {
-        predecessor: "8",
-        successor: "10"
-    }
+    ]
 });
 
 
@@ -162,11 +127,7 @@ registerRank({
         " x x x ",
         " x x x ",
         " x   0I"
-    ],
-    runConnections: {
-        predecessor: "9",
-        successor: "J"
-    }
+    ]
 });
 
 
@@ -179,11 +140,7 @@ registerRank({
         " |/%/| ",
         "  (} x ",
         "      ſ"
-    ],
-    runConnections: {
-        predecessor: "10",
-        successor: "Q"
-    }
+    ]
 });
 
 
@@ -196,11 +153,7 @@ registerRank({
         " /\\%\\/ ",
         " '{)/x ",
         "      O"
-    ],
-    runConnections: {
-        predecessor: "J",
-        successor: "K"
-    }
+    ]
 });
 
 
@@ -213,8 +166,5 @@ registerRank({
         " |/%/| ", 
         " |(} x ", 
         "  M   >"
-    ],
-    runConnections: {
-        predecessor: "Q"
-    }
+    ]
 });

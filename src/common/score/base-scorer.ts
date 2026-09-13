@@ -3,7 +3,6 @@ import { Card, Hand } from "../card/card.js"
 
 
 const MIN_RUN_LENGTH = 3;
-const RUN_RANK_ORDER = [ "0", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" ];
 
 
 /**
@@ -91,7 +90,7 @@ export class BaseScorer {
 		let score: bigint = 0n;
 		let numPermutations: bigint = 1n;
 		let runLength = 0;
-		for (const rank of RUN_RANK_ORDER) {
+		for (const rank of Card.Rank.RUN_ORDER) {
 			if (!(rank in this.rankCount)) {
 				if (runLength >= MIN_RUN_LENGTH) {
 					score += BigInt(runLength) * numPermutations;
@@ -141,7 +140,7 @@ export class BaseScorer {
 
 	public getNobsScore(): bigint {
 		let score = 0;
-		for (const suit in Card.Suit.basic()) {
+		for (const suit of Card.Suit.basic()) {
 			score += this.jackSuitCount[suit] * this.cutSuitsCount[suit];
 		}
 		score += this.jackSuitCount[Card.Suit.WILD];

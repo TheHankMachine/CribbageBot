@@ -1,10 +1,10 @@
 import { Card } from "../../card/card.js";
-import { DisplayConstants } from "../../../constants.js";
 
 
-const RANKS = [ "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "0", "15", ">>" ];
-const MODIFIERS = [ "*", ",", "+" ];
-const SUITS = DisplayConstants.SUIT_SYMBOLS.split("");
+const RANKS = Card.Rank.all();
+const MODIFIERS = Card.Modifier.all();
+const SUITS = Card.Suit.symbols();
+
 
 /**
  * @return [match, remainingString] 

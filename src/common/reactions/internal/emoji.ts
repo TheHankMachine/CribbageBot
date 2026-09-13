@@ -27,7 +27,7 @@ export namespace Emojis {
     };
 
 
-    export const CUSTOM_NAME_TO_ID: Record<string, string> = process.env.DEPLOY? {
+    export const CUSTOM_NAME_TO_ID: Record<string, string> = (!process.env.DEPLOY)? {
         zzero: "1544776281688645703",
         ztwo: "1544776280556441740",
         zthree: "1544776279423852584",

@@ -15,7 +15,7 @@ registerSlashCommand(
 
         deck.forEach(card => suitBuckets[card.suit].push(card));        
 
-        const content = suitBuckets.map((cards) => Card.getSmallCardDisplay(cards)).join("\n");
+        const content = suitBuckets.map((cards) => Card.Display.getSmallCardDisplay(cards)).join("\n");
 
         await interaction.reply({
             content: ansiWrap(content),

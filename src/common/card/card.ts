@@ -1,13 +1,15 @@
 import * as Util from "./internal/util.js"
 import * as Shop from "./internal/shop.js"
+import * as Ranks from "./internal/rank/rank.js"
+import * as Modifiers from "./internal/modifier/modifier.js"
 // import * as Scoring from "./internal/scoring.js"
-import * as Display from "./internal/display.js"
+import * as Display from "./internal/display/display.js"
 import * as Suits from "./internal/suit.js"
 
 
 export type Card = {
     rank: Card.Rank,
-    suit: Suits.Suit,
+    suit: Card.Suit,
     modifier?: Card.Modifier | undefined,
     modifierValue?: Card.ModifierValue | undefined
 };
@@ -18,10 +20,10 @@ export type Deck = Card[];
 
 
 export namespace Card {
-    export type Rank = string;
     export type Suit = Suits.Suit;
+    export type Rank = Ranks.Rank;
     
-    export type Modifier = string;
+    export type Modifier = Modifiers.Modifier;
     export type ModifierValue = number | Rank | undefined;
 }
 
@@ -30,5 +32,8 @@ export const Card = {
     ...Util,
     ...Shop,
     ...Display,
-    ...Suits
+    ...Suits,
+    ...Ranks,
+    ...Modifiers
 };
+

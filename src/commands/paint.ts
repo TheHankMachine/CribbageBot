@@ -87,6 +87,6 @@ registerOnAddReactionHandler("paint", async (user, reaction) => {
     await Player.setDeck(user, deck);
 
     const channel = reaction.message.channel as TextChannel;
-    await channel.send(ansiWrap(Card.renameMeLaterTransmutationDisplay(originalCopy, card)));
+    await channel.send(ansiWrap(Card.Display.renameMeLaterTransmutationDisplay(originalCopy, card)));
     await reaction.users.remove(user.id);
 });

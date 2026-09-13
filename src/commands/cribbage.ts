@@ -87,7 +87,7 @@ registerSlashCommand(
             "cribbage",
             interaction.channel! as TextChannel,
             "The Casino",
-            "The Dealer deals you:\n" + Card.getLargeHandDisplay(hand.slice(0, Constants.HAND_SIZE)),
+            "The Dealer deals you:\n" + Card.Display.getLargeHandDisplay(hand.slice(0, Constants.HAND_SIZE)),
             emojis,
         );
   }
@@ -131,7 +131,7 @@ registerOnAddReactionHandler(
             user,
             reaction.message.channel as TextChannel,
             "The Casino",
-            `You score:\n${Card.getLargeHandDisplay(score.hand, score.cut, false)}\n${explaination}`,
+            `You score:\n${Card.Display.getLargeHandDisplay(score.hand, score.cut, false)}\n${explaination}`,
         );
   }
 );

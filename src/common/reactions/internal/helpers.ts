@@ -45,12 +45,10 @@ export function getSuit(reaction: MessageReaction): Card.Suit | undefined {
 }
 
 
-export function getEmojiFromNumber(num: number, suit?: Card.Suit): string | undefined {
-    if (!suit) return Emojis.Numbers[num];
+export function getEmojiFromNumber(num: number, suit?: Card.Suit): string {
+    if (suit == undefined) return Emojis.Numbers[num];
 
     const name = SUIT_COLOR_PREFIX[suit] + INDEX_TO_WORDS[num];
-    // if index is undefined, name will be NaN
-    if (isNaN(name as any)) return undefined;
 
     return `:${name}:${Emojis.CUSTOM_NAME_TO_ID[name]}`;
 }

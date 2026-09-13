@@ -22,13 +22,13 @@ export function testScore(
     const scorer = new ExtendedScorer(hand, cut);
     const total = scorer.getTotal();
 
-    let text = `scores ${Card.getSmallHandDisplay(hand, cut)}` 
+    let text = `scores ${Card.Display.getSmallHandDisplay(hand, cut)}` 
     text += ` as ${total}`;
 
     if (total != expectedScore) {
         text += ` (should be ${expectedScore})`
     }
-    text += ` with ${Card.getSmallHandDisplay(scorer.hand, scorer.cut, false)}`
+    text += ` with ${Card.Display.getSmallHandDisplay(scorer.hand, scorer.cut, false)}`
 
     // ${expectedScore.toString()}`
     // text += ` (expands to ${Card.getSmallHandDisplay(scorer.hand, scorer.cut, false)})`

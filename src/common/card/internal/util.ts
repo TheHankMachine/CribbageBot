@@ -10,13 +10,13 @@ export function isSuit(card: Card, suit: Card.Suit) {
 }
 
 
-export function getRankValue(card: Card) {
-    return Constants.CARD_VALUES[card.rank];
+export function getPip(card: Card): string {
+    return card.rank + (card.modifier ?? "") + (card.modifierValue ?? "");
 }
 
 
-export function getPip(card: Card): string {
-    return card.rank + (card.modifier ?? "") + (card.modifierValue ?? "");
+export function getRankValue(card: Card): number {
+    return Card.Rank.getValue(card.rank);
 }
 
 

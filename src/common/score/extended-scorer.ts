@@ -20,7 +20,6 @@ export class ExtendedScorer extends BaseScorer {
 
     public scoreMults: Record<ScoringComponent, number> = ScoringComponent.entries().map(_ => 1);
     public bonus: number = 0;
-    public rightwardCopies = 0;
 
     public hand: Hand = [];
     public cut: Card[] = [];
@@ -44,53 +43,39 @@ export class ExtendedScorer extends BaseScorer {
 
     // TODO: stragety pattern or something
     public processRanks(card: Card): Card[] {
-
-        if (card.rank == ">>") {
-            
-            // janky fix for shitty edge case 🤮🤮🤮
-            const result = this.processModifiers(card).flat();
-            const f = result.filter(card => card.rank != ">>");
-            
-            this.rightwardCopies += result.length - f.length;
-
-            return f;
-            
-        } else if (this.rightwardCopies >= 1) {
-            const copies = this.rightwardCopies + 1;
-            this.rightwardCopies = 0;
-            return new Array(copies).fill(card);
-        }
-
-        return [card];
+        return Card.Rank.process(this, card);
     }
 
 
     // TODO: stragety pattern or something
     public processModifiers(card: Card): Card[] {
-        if (card.modifier == "*") {
-            const n = Number(card.modifierValue); // FAUK ME 
-            // it does not matter that this is all the same reference
-            return new Array(n).fill(card);
-        }
+
+        return Card.Modifier.process(this, card);
+
+        // if (card.modifier == "*") {
+        //     const n = Number(card.modifierValue); // FAUK ME 
+        //     // it does not matter that this is all the same reference
+        //     return new Array(n).fill(card);
+        // }
         
-        if (card.modifier == ",") {
-            const copy = { ...card };
-            copy.rank = card.modifierValue as Card.Rank;
-            // strip card of union modifier so we don't get extra cards
-            copy.modifier = undefined;
-            return [card, ...this.processRanks(copy)];
-        }
+        // if (card.modifier == ",") {
+        //     const copy = { ...card };
+        //     copy.rank = card.modifierValue as Card.Rank;
+        //     // strip card of union modifier so we don't get extra cards
+        //     copy.modifier = undefined;
+        //     return [card, ...this.processRanks(copy)];
+        // }
 
-        if (card.modifier == "+") {
-            this.bonus += Number(card.modifierValue);
-        }
+        // if (card.modifier == "+") {
+        //     this.bonus += Number(card.modifierValue);
+        // }
 
-        return [card];
+        // return [card];
     }
     
 
     public getExplainationAndScore(): [string, bigint] {
-		const halfWidth = Math.floor(Constants.DisplayConstants.MAX_TERMINAL_WIDTH / 2);
+		const halfWidth = Math.floor(Constants.MAX_ANSI_WIDTH / 2);
 
         const scores: Record<ScoringComponent, bigint> = {
             [ScoringComponent.FIFTEEN]: this.getFifteensScore(),
