@@ -69,7 +69,7 @@ export async function getAndSortDeck(user: User): Promise<Deck> {
         if (a.suit != b.suit) {
             return a.suit - b.suit;
         }
-        return RANK_ORDER[a.rank[0]] - RANK_ORDER[b.rank[0]];
+        return RANK_ORDER[a.rank] - RANK_ORDER[b.rank];
     });
     await setUserData<Deck>(user.id, "deck", deck);
     return deck;

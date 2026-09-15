@@ -7,6 +7,9 @@ export type DeckPosition = {
 };
 
 
+export type Direction = "up" | "down" | "left" | "right";
+
+
 // TODO: remove this export
 function getAndMoveSuit(deck: Deck, position: DeckPosition, delta: number) {
     if (delta == 0) return;
@@ -25,8 +28,17 @@ function getAndMoveSuit(deck: Deck, position: DeckPosition, delta: number) {
 
     // get new bucket and the index to enter that bucket, clamping to the rightmost card
     const bucket = suitBuckets[suit];
+
+    const j = suitBuckets[position.card.suit].findIndex(card => Card.equals(card, position.card));
+    // failsafe if the card is not found
+    if (j == -1) {
+        position.card = deck[0];
+        position.dupeNumber = 0;
+        return;
+    }
+
     const i = Math.min(
-        position.dupeNumber + suitBuckets[position.card.suit].findIndex(card => Card.equals(card, position.card)),
+        position.dupeNumber + j,
         bucket.length - 1
     );
     
@@ -42,8 +54,17 @@ function getAndMoveRank(deck: Deck, position: DeckPosition, delta: number) {
     if (delta == 0) return;
 
     const suitBucket = deck.filter(card => card.suit == position.card.suit);
+
+    const j = suitBucket.findIndex(card => Card.equals(card, position.card));
+    // failsafe if the card is not found
+    if (j == -1) {
+        position.card = deck[0];
+        position.dupeNumber = 0;
+        return;
+    }
+
     const i = (
-        suitBucket.findIndex(card => Card.equals(card, position.card))
+        j
         + position.dupeNumber 
         + delta
         + suitBucket.length
@@ -60,7 +81,7 @@ function getAndMoveRank(deck: Deck, position: DeckPosition, delta: number) {
 /**
  * @requires deck is sorted
  */
-export function getAndMove(deck: Deck, position: DeckPosition, move: "up" | "down" | "left" | "right") {
+export function getAndMove(deck: Deck, position: DeckPosition, move: Direction) {
     if (move == "up") return getAndMoveSuit(deck, position, -1);
     else if (move == "down") return getAndMoveSuit(deck, position, 1);
     else if (move == "left") return getAndMoveRank(deck, position, -1);

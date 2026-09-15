@@ -15,6 +15,10 @@ export namespace Rank {
         return Definitions.ranks;
     }
 
+    export function special(): Rank[] {
+        return Definitions.specialRanks;
+    }
+
     export function getValue(rank: Rank) {
         return Definitions.values[rank];
     }
@@ -23,24 +27,27 @@ export namespace Rank {
         return Definitions.faces[rank];
     }
 
-    export function process(scorer: ExtendedScorer, card: Card): Card[] {
-        let result = preProcessRank(scorer, card);
-        if (result) return result;
-        result = processRank(scorer, card);
-        if (result) return result;
-        return [card];
-    }
+    // export function process(scorer: ExtendedScorer, : Card): {
+        // let result = preProcessRank(scorer, card);
+        // if (result) return result;
+        // result = processRank(scorer, card);
+        // if (result) return result;
+        // return [card];
+    // }
 
-    function preProcessRank(scorer: ExtendedScorer, card: Card): Card[] | undefined {
-        for (const cb of Definitions.preScoringCallbacks) {
-            const result = cb(scorer, card);
-            if (result) return result;
-        }
-        return undefined;
-    }
 
-    function processRank(scorer: ExtendedScorer, card: Card): Card[] | undefined {
-        return Definitions.scoreCallbacks[card.rank]?.(scorer, card);
-    }
+    
+
+    // function preProcessRank(scorer: ExtendedScorer, card: Card): Card[] | undefined {
+    //     for (const cb of Definitions.preScoringCallbacks) {
+    //         const result = cb(scorer, card);
+    //         if (result) return result;
+    //     }
+    //     return undefined;
+    // }
+
+    // function processRank(scorer: ExtendedScorer, card: Card): Card[] | undefined {
+    //     return Definitions.scoreCallbacks[card.rank]?.(scorer, card);
+    // }
 
 }

@@ -2,6 +2,8 @@ import { Card, Hand } from "../card/card.js";
 import { BaseScorer } from "./base-scorer.js";
 import { ScoringComponent } from "./scoring-component.js";
 import * as Constants from "../../constants.js"
+import { Definitions as RankDefinitions } from "../card/internal/rank/definitions.js";
+import { Definitions as ModifierDefinitions } from "../card/internal/modifier/definitions.js";
 
 
 const SCORING_COMPONENT_TO_NAME: Record<ScoringComponent, string> = {
@@ -24,54 +26,104 @@ export class ExtendedScorer extends BaseScorer {
     public hand: Hand = [];
     public cut: Card[] = [];
 
+    public unprocessedHand: Hand = [];
+    public unprocessedCut: Hand = [];
+
 
     constructor(hand: Hand, cut: Card[] = []) {
         super();
 
-        this.hand = hand.flatMap(card => this.process(card));
-        this.cut = cut.flatMap(card => this.process(card));
+        this.unprocessedHand = hand.slice();
+        this.unprocessedCut = cut.slice();
+
+        this.processBucket(this.unprocessedHand, this.hand);
+        this.processBucket(this.unprocessedCut, this.cut);
+
+        // for (const card of hand) {
+        //     this.hand.push(...this.process(card));
+        // }
+
+        // for (const card of cut) {
+        //     this.cut.push(...this.process(card));
+        // }
+
+        // this.hand = hand.flatMap(card => this.process(card));
+        // this.cut = cut.flatMap(card => this.process(card));
         
         this.hand.forEach(card => this.addHandCard(card));
         this.cut.forEach(card => this.addCutCard(card));
     }
 
 
-    public process(card: Card): Card[] {
-        return this.processRanks(card).flatMap(card => this.processModifiers(card));
+    private processBucket(bucket: Card[], finishedAcc: Card[]) {
+
+        while (bucket.length > 0) {
+            const card = bucket.shift()!;
+            this.processCard(card, bucket, finishedAcc);
+        }
+    }
+
+    private processCard(card: Card, bucket: Card[], finishedAcc: Card[]) {
+        for (const pscb of RankDefinitions.preScoringCallbacks) {
+            let skip = pscb(this, card, bucket);
+            if (skip) return;
+        }
+
+        if (card.modifier) {
+            const modcb = ModifierDefinitions.scoreCallbacks[card.modifier];
+            if (modcb) {
+                let skip = modcb(this, card, bucket);
+                if (skip) return;
+            }
+        }
+
+        const rankcb = RankDefinitions.scoreCallbacks[card.rank];
+        if (rankcb) {
+            let skip = rankcb(this, card, bucket);
+            if (skip) return;
+        }
+
+
+        finishedAcc.push(card);
     }
 
 
-    // TODO: stragety pattern or something
-    public processRanks(card: Card): Card[] {
-        return Card.Rank.process(this, card);
-    }
+    // public process(card: Card): Card[] {
+    //     return this.processRanks(card).flatMap(card => this.processModifiers(card));
+    // }
 
 
-    // TODO: stragety pattern or something
-    public processModifiers(card: Card): Card[] {
+    // // TODO: stragety pattern or something
+    // public processRanks(card: Card): Card[] {
+    //     // return Card.Rank.process(this, card);
+    // }
 
-        return Card.Modifier.process(this, card);
 
-        // if (card.modifier == "*") {
-        //     const n = Number(card.modifierValue); // FAUK ME 
-        //     // it does not matter that this is all the same reference
-        //     return new Array(n).fill(card);
-        // }
+    // // TODO: stragety pattern or something
+    // public processModifiers(card: Card): Card[] {
+
+    //     // return Card.Modifier.process(this, card);
+
+    //     // if (card.modifier == "*") {
+    //     //     const n = Number(card.modifierValue); // FAUK ME 
+    //     //     // it does not matter that this is all the same reference
+    //     //     return new Array(n).fill(card);
+    //     // }
         
-        // if (card.modifier == ",") {
-        //     const copy = { ...card };
-        //     copy.rank = card.modifierValue as Card.Rank;
-        //     // strip card of union modifier so we don't get extra cards
-        //     copy.modifier = undefined;
-        //     return [card, ...this.processRanks(copy)];
-        // }
+    //     // if (card.modifier == ",") {
+    //     //     const copy = { ...card };
+    //     //     copy.rank = card.modifierValue as Card.Rank;
+    //     //     // strip card of union modifier so we don't get extra cards
+    //     //     copy.modifier = undefined;
+    //     //     return [card, ...this.processRanks(copy)];
+    //     // }
 
-        // if (card.modifier == "+") {
-        //     this.bonus += Number(card.modifierValue);
-        // }
+    //     // if (card.modifier == "+") {
+    //     //     this.bonus += Number(card.modifierValue);
+    //     // }
 
-        // return [card];
-    }
+    //     // return [card];
+    // }
     
 
     public getExplainationAndScore(): [string, bigint] {

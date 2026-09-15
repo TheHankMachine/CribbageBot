@@ -77,7 +77,7 @@ registerSlashCommand(
 
         // hand = dealRigged(deck, await getLuck(interaction.member.user.id), 3, 4);
 
-        const emojis = hand.slice(0, Constants.HAND_SIZE).map((card, i) => ReactionButton.getEmojiFromNumber(i, card.suit)!);
+        const emojis = hand.slice(0, Constants.HAND_SIZE).map((card, i) => ReactionButton.getEmojiFromNumber(i + 1, card.suit)!);
 
         await setUserData<Card[]>(interaction.user.id, "deal", hand);
         await setUserData<number[]>(interaction.user.id, "discard", []);
@@ -100,8 +100,8 @@ registerOnAddReactionHandler(
     async (user: User, reaction: MessageReaction) => {
         const discardSelection = await getUserData<number[]>(user.id, "discard", []);
 
-        const discardIndex = ReactionButton.getNumber(reaction);
-        if (discardIndex == -1 || discardIndex >= Constants.HAND_SIZE || discardSelection.includes(discardIndex)) return;
+        const discardIndex = ReactionButton.getNumber(reaction) - 1;
+        if (discardIndex <= -1 || discardIndex >= Constants.HAND_SIZE || discardSelection.includes(discardIndex)) return;
 
         discardSelection.push(discardIndex);
 

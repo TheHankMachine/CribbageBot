@@ -1,14 +1,15 @@
-import { registerOnAddReactionHandler, registerSlashCommand } from "../bot.js";
+import { registerOnAddReactionHandler, registerOnRemoveReactionHandler, registerSlashCommand } from "../bot.js";
 import { GuildMember, Message, MessageReaction, SlashCommandBuilder, TextChannel, User } from "discord.js"
 import { replyEphemeral } from "../common/ephemeral.js";
 import { getNick } from "../common/nick.js";
 import { addReactionAndStore, sendImpersonatedReactionMessage, sendReactionMessage } from "../common/reactions/reaction-message.js";
 import { getUserData, setUserData } from "../common/db.js";
 import { ansiWrap, editImpersonatedMessage, sendImpersonatedMessage } from "../common/impersonate.js";
-import { DeckPosition, getAndMove } from "../common/player/internal/deck-position.js";
+import { DeckPosition, Direction, getAndMove } from "../common/player/internal/deck-position.js";
 import { getDeck } from "../common/player/internal/deck.js";
 import { Card } from "../common/card/card.js";
 import { ReactionButton } from "../common/reactions/reaction-button.js";
+import { Player } from "../common/player/player.js";
 
 
 type TradeRequest = {
@@ -133,27 +134,60 @@ registerOnAddReactionHandler("trade", async (user: User, reaction: MessageReacti
         return;
     }
 
-    const deck = await getDeck(user);
     const tradeData = await getUserData<TradeData>(user.id, "trade", {} as TradeData);
     if (!tradeData.request) return;
-
-    // if (reaction.emoji.name == Emojis.CONFIRM) {
+    const deck = await getDeck(user);
+    
+    
+    if (ReactionButton.isConfirmation(reaction)) {
+        tradeData.confirmations[user.id] = true;
+        setUserData<TradeData>(tradeData.request.initiatorId, "trade", tradeData);
+        setUserData<TradeData>(tradeData.request.targetId, "trade", tradeData);
         
-    // }
+        const confirmations = Object.values(tradeData.confirmations);
+        if (confirmations.every(confirmed => confirmed)) {
+            // all players confirmed, so do trade
 
-    // TODO: FINISH ALL OF THIS
-    if (tradeData.confirmations[user.id]) {
+            // there is a race condition here which could cause cards to trade twice
+            // this is deemed too unlikely to happen
 
+            // if a player changes a card while it's selected in a trade, the removal will fail
+            // and they will gain a card
+
+
+            // 🤮🤮🤮
+            let success = await Player.removeCard({ id: tradeData.request.initiatorId} as User, tradeData.positions[tradeData.request.initiatorId].card);
+            if (success) await Player.giveCard({ id: tradeData.request.initiatorId} as User, tradeData.positions[tradeData.request.targetId].card);
+            
+            success = await Player.removeCard({ id: tradeData.request.targetId} as User, tradeData.positions[tradeData.request.targetId].card);
+            if (success) await Player.giveCard({ id: tradeData.request.targetId} as User, tradeData.positions[tradeData.request.initiatorId].card);
+
+            await reaction.message.reactions.removeAll();
+      
+            await editImpersonatedMessage(
+                reaction.message as Message<true>,
+                ansiWrap("Traded:\n" + getTradeDisplay(tradeData))
+            );
+            // await reaction.message.delete();
+            // remove callback 
+        }
+
+        return;
     }
 
-    let direction = Object.keys(ReactionButton.Emojis.Directions)
-    //@ts-ignore (bruv, it's literally a fucking key)
-        .find(direction => Emojis.Directions[direction] == reaction.emoji.name)
-        ?.toLowerCase();
 
+    const confirmations = Object.values(tradeData.confirmations);
+    if (confirmations.some(confirmed => confirmed)) {
+        // at least one player has confirmed, thus neither player may change their trade
+        await reaction.users.remove(user.id);
+        return;
+    }
+
+    let direction = ReactionButton.getDirection(reaction);
     if (!direction) return;
 
-    getAndMove(deck, tradeData.positions[user.id], direction as any);
+    // TODO: remove any
+    getAndMove(deck, tradeData.positions[user.id], direction.toLowerCase() as Direction);
 
     setUserData<TradeData>(tradeData.request.initiatorId, "trade", tradeData);
     setUserData<TradeData>(tradeData.request.targetId, "trade", tradeData);
@@ -166,8 +200,6 @@ registerOnAddReactionHandler("trade", async (user: User, reaction: MessageReacti
     await reaction.users.remove(user.id);
 
     
-
-
 
 
 
@@ -197,4 +229,18 @@ registerOnAddReactionHandler("trade", async (user: User, reaction: MessageReacti
     //         Constants.CONFIRMATION_EMOJIES.deny
     //     ]);
     // }
+});
+
+
+
+registerOnRemoveReactionHandler("trade", async (user, reaction) => {
+    if (ReactionButton.isConfirmation(reaction)) {
+        const tradeData = await getUserData<TradeData>(user.id, "trade", {} as TradeData);
+        if (!tradeData.request) return;
+
+        tradeData.confirmations[user.id] = false;
+        setUserData<TradeData>(tradeData.request.initiatorId, "trade", tradeData);
+        setUserData<TradeData>(tradeData.request.targetId, "trade", tradeData);
+        return;
+    }
 });

@@ -108,4 +108,29 @@ test("dupeNumber is maintained with suits", () => {
     expect(position.card.suit).toBe(Card.Suit.WILD);
     expect(position.card.rank).toBe("Q");
     expect(position.dupeNumber).toBe(3);
-})
+});
+
+
+test("once problematic test case works", () => {
+    const position = { card: parseCard("7♥"), dupeNumber: 0 };
+    getAndMove(deck, position, "down");
+
+    expect(position.card.suit).toBe(Card.Suit.DIAMONDS);
+    expect(position.card.rank).toBe("7");
+    // expect(position.dupeNumber).toBe(3);
+});
+
+
+test("failsafe is triggered when starting from a position outside of the deck", () => {
+    const position1 = { card: parseCard("J♥"), dupeNumber: 0 };
+    getAndMove(deck, position1, "down");
+
+    expect(position1.card.suit).toBe(Card.Suit.SPADES);
+    expect(position1.card.rank).toBe("A");
+
+    const position2 = { card: parseCard("J♥"), dupeNumber: 0 };
+    getAndMove(deck, position2, "right");
+
+    expect(position2.card.suit).toBe(Card.Suit.SPADES);
+    expect(position2.card.rank).toBe("A");
+});

@@ -2,10 +2,11 @@ import { ExtendedScorer } from "../../../score/extended-scorer.js"
 import { Card } from "../../card.js"
 
 
-// this is overkill and stupid.
-
-
-export type ScoreCallback = (scorer: ExtendedScorer, card: Card) => Card[];
+/**
+ * returns whether the current card should be skipped in being added to the hand
+ * (i.e: a modified copy was but into the backlog and thus the current card should be skipped)
+ */
+export type ScoreCallback = (scorer: ExtendedScorer, card: Card, backlog: Card[]) => boolean;
 
 
 export type ModifierDefinition = {

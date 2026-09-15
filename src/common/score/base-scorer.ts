@@ -65,6 +65,7 @@ export class BaseScorer {
 
     private maintainSumPossibilities(card: Card): void {
         const value = Card.getRankValue(card);
+		if (value < 0 || value > 15) return;
         for (let j = 15; j >= value; j--) {
         	this.sumPossibilities[j] += this.sumPossibilities[j - value];
         }

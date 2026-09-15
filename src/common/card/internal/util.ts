@@ -30,7 +30,7 @@ export function equals(a: Card, b: Card) {
         && a.suit == b.suit
         && a.modifier == b.modifier
         && implies(a.modifierValue != b.modifierValue, !a.modifier && !b.modifier);
-}3
+}
 
 
 // export function getCardDescription(card: Card): string {

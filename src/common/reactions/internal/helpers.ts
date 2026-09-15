@@ -47,8 +47,12 @@ export function getSuit(reaction: MessageReaction): Card.Suit | undefined {
 
 export function getEmojiFromNumber(num: number, suit?: Card.Suit): string {
     if (suit == undefined) return Emojis.Numbers[num];
-
     const name = SUIT_COLOR_PREFIX[suit] + INDEX_TO_WORDS[num];
-
     return `:${name}:${Emojis.CUSTOM_NAME_TO_ID[name]}`;
 }
+
+
+export function getDirection(reaction: MessageReaction): string | undefined {
+    // @ts-ignore (bruv, it's literally a fucking key)
+    return Object.keys(Emojis.Directions).find(direction => Emojis.Directions[direction] == reaction.emoji.name);
+}``
